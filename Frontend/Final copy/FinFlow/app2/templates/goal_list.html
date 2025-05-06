@@ -1,0 +1,799 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Financial Goals | Budget Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #6c8dff;
+        --success-color: #4dbd74;
+        --warning-color: #ffbe2e;
+        --danger-color: #f86c6b;
+        --info-color: #39c0ed;
+        --dark-color: #1a1d24;
+        --darker-color: #12141a;
+        --card-bg: #202532;
+        --secondary-bg: #262b38;
+        --body-bg: #171a21;
+        --text-primary: #e2e8f0;
+        --text-secondary: #a0aec0;
+        --text-muted: #718096;
+        --border-color: #2d3748;
+        --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        --transition-speed: 0.35s;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--body-bg);
+        color: var(--text-primary);
+        overflow-x: hidden;
+    }
+    
+    .container {
+        max-width: 1200px;
+        padding: 2rem 1rem;
+    }
+    
+    h1, h2, h3, h4, h5 {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .text-muted {
+        color: var(--text-secondary) !important;
+    }
+    
+    .page-header {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+    
+    .goal-card {
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        transition: all var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
+        background: var(--card-bg);
+    }
+    
+    .goal-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+    }
+    
+    .goal-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.9;
+        transition: transform var(--transition-speed);
+    }
+    
+    .goal-card:hover .goal-icon {
+        transform: scale(1.1);
+    }
+    
+    .card-body {
+        padding: 1.75rem;
+    }
+    
+    .progress {
+        height: 12px;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #3a3f50;
+        margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+        border-radius: 6px;
+        transition: width 1s ease;
+    }
+    
+    .stats-card {
+        background-color: var(--card-bg);
+        border-radius: 1rem;
+        border: none;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        overflow: hidden;
+        transition: transform var(--transition-speed);
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background-color: #6c757d;
+    }
+    
+    .stats-card.primary::before {
+        background-color: var(--primary-color);
+    }
+    
+    .stats-card.success::before {
+        background-color: var(--success-color);
+    }
+    
+    .stats-card.info::before {
+        background-color: var(--info-color);
+    }
+    
+    .stats-card h5 {
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stats-card h3 {
+        margin-bottom: 0;
+        font-weight: 700;
+    }
+    
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+        background-color: #5274e9;
+        border-color: #5274e9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(108, 141, 255, 0.3);
+    }
+    
+    .btn-info {
+        background-color: var(--info-color);
+        border-color: var(--info-color);
+        color: white;
+    }
+    
+    .btn-info:hover {
+        background-color: #2dabdb;
+        border-color: #2dabdb;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(57, 192, 237, 0.3);
+    }
+    
+    .table {
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        color: var(--text-primary);
+    }
+    
+    .table th {
+        background-color: #2a2f3f;
+        border-top: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        color: var(--text-secondary);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(108, 141, 255, 0.05);
+    }
+    
+    .alert {
+        border-radius: 0.8rem;
+        border: none;
+        padding: 1.25rem;
+        background-color: #2a3042;
+        color: var(--text-primary);
+    }
+    
+    .alert-info {
+        background-color: rgba(57, 192, 237, 0.1);
+        border-left: 4px solid var(--info-color);
+    }
+    
+    /* Goal type-specific styles */
+    .goal-type-vac {
+        background: linear-gradient(45deg, rgba(255, 190, 46, 0.1), rgba(255, 190, 46, 0.05));
+    }
+    
+    .goal-type-emf {
+        background: linear-gradient(45deg, rgba(248, 108, 107, 0.1), rgba(248, 108, 107, 0.05));
+    }
+    
+    .goal-type-hdp {
+        background: linear-gradient(45deg, rgba(77, 189, 116, 0.1), rgba(77, 189, 116, 0.05));
+    }
+    
+    .goal-type-car {
+        background: linear-gradient(45deg, rgba(108, 141, 255, 0.1), rgba(108, 141, 255, 0.05));
+    }
+    
+    .goal-type-edu {
+        background: linear-gradient(45deg, rgba(57, 192, 237, 0.1), rgba(57, 192, 237, 0.05));
+    }
+    
+    .goal-type-ret {
+        background: linear-gradient(45deg, rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.05));
+    }
+    
+    .goal-type-deb {
+        background: linear-gradient(45deg, rgba(248, 108, 107, 0.1), rgba(248, 108, 107, 0.05));
+    }
+    
+    /* Status badges */
+    .status-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 2rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .status-badge i {
+        margin-right: 0.25rem;
+    }
+    
+    .status-badge.on-track {
+        background-color: rgba(77, 189, 116, 0.2);
+        color: var(--success-color);
+    }
+    
+    .status-badge.behind {
+        background-color: rgba(255, 190, 46, 0.2);
+        color: var(--warning-color);
+    }
+    
+    .status-badge.completed {
+        background-color: rgba(77, 189, 116, 0.2);
+        color: var(--success-color);
+    }
+    
+    /* Animation classes */
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    .slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+    }
+    
+    .slide-in-up {
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    /* Enhanced Container Styling */
+    .content-container {
+        background-color: var(--secondary-bg);
+        border-radius: 1.5rem;
+        box-shadow: var(--card-shadow);
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .dashboard-section {
+        background-color: var(--secondary-bg);
+        border-radius: 1.5rem;
+        box-shadow: var(--card-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Improved Stats Cards */
+    .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .stats-card {
+        flex: 1;
+        min-width: 250px;
+        background: var(--card-bg);
+        border-radius: 1.2rem;
+        border: none;
+        padding: 1.8rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 100%;
+        background-color: #6c757d;
+        border-radius: 4px 0 0 4px;
+    }
+
+    /* Enhanced Goal Cards */
+    .goals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .goal-card {
+        border: none;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        background: var(--card-bg);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .goal-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .goal-card .card-header {
+        background: transparent;
+        border-bottom: none;
+        padding: 1.5rem 1.5rem 0.5rem;
+        text-align: center;
+    }
+
+    .goal-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        transition: all 0.4s ease;
+        display: inline-block;
+    }
+
+    .goal-card:hover .goal-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    .goal-card .card-body {
+        padding: 1.5rem;
+        flex: 1;
+    }
+
+    .goal-card .card-footer {
+        background: transparent;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.2rem 1.5rem;
+    }
+
+    /* Improved Progress Bar */
+    .progress {
+        height: 14px;
+        border-radius: 7px;
+        overflow: hidden;
+        background-color: #3a3f50;
+        margin-bottom: 1.2rem;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-bar {
+        border-radius: 7px;
+        transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        background-size: 20px 20px;
+        background-image: linear-gradient(
+            45deg,
+            rgba(255, 255, 255, .15) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .15) 50%,
+            rgba(255, 255, 255, .15) 75%,
+            transparent 75%,
+            transparent
+        );
+        animation: progress-bar-stripes 1.5s linear infinite;
+    }
+
+    @keyframes progress-bar-stripes {
+        from { background-position: 40px 0; }
+        to { background-position: 0 0; }
+    }
+
+    /* Enhanced Table Styling */
+    .table-container {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        padding: 0.5rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background-color: #2a2f3f;
+        border-top: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px; 
+        padding: 1.2rem 1rem;
+        color: var(--text-secondary);
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .table tbody td {
+        padding: 1.2rem 1rem;
+        vertical-align: middle;
+        color: #000000;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Enhanced Button Styling */
+    .action-btn {
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        border-radius: 0.8rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .recommendations-btn {
+        background: linear-gradient(45deg, var(--info-color), #2980b9);
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 15px rgba(57, 192, 237, 0.3);
+    }
+
+    .recommendations-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 25px rgba(57, 192, 237, 0.4);
+    }
+
+    /* Status badges with improved styling */
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .status-badge i {
+        margin-right: 0.4rem;
+        font-size: 1rem;
+    }
+
+    .status-badge.on-track {
+        background-color: rgba(77, 189, 116, 0.15);
+        color: var(--success-color);
+        border: 1px solid rgba(77, 189, 116, 0.2);
+    }
+
+    .status-badge.behind {
+        background-color: rgba(255, 190, 46, 0.15);
+        color: var(--warning-color);
+        border: 1px solid rgba(255, 190, 46, 0.2);
+    }
+
+    .status-badge.completed {
+        background-color: rgba(77, 189, 116, 0.15);
+        color: var(--success-color);
+        border: 1px solid rgba(77, 189, 116, 0.2);
+    }
+
+    /* Page header with enhanced styling */
+    .page-header-container {
+        margin-bottom: 3rem;
+    }
+
+    .page-header {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 1.2rem;
+        display: inline-block;
+    }
+
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 5px;
+        background: linear-gradient(to right, var(--primary-color), #4a77e5);
+        border-radius: 3px;
+    }
+
+    /* Table link styling */
+    .table a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .table a:hover {
+        color: #8ba6ff;
+        text-decoration: none;
+    }
+
+    /* Hover effects for table rows */
+    .table tbody tr {
+        transition: background-color 0.3s;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(108, 141, 255, 0.1);
+    }
+    
+    /* Recommendation button pulse animation */
+    .pulse-btn {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideInRight {
+        from { transform: translateX(30px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideInUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .stats-container {
+            flex-direction: column;
+        }
+        
+        .goals-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .content-container, 
+        .dashboard-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="content-container">
+        <div class="page-header-container">
+            <h1 class="page-header fade-in">Your Financial Goals</h1>
+        </div>
+        
+        <div class="stats-container fade-in">
+            <div class="stats-card primary slide-in-up" style="animation-delay: 0.1s">
+                <h5>Total Saved</h5>
+                <h3 class="counter">${{ total_saved|floatformat:2 }}</h3>
+            </div>
+            <div class="stats-card success slide-in-up" style="animation-delay: 0.2s">
+                <h5>Target Amount</h5>
+                <h3 class="counter">${{ total_target|floatformat:2 }}</h3>
+            </div>
+            <div class="stats-card info slide-in-up" style="animation-delay: 0.3s">
+                <h5>Overall Progress</h5>
+                <div class="progress mt-2">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" 
+                        data-width="{{ overall_progress }}" aria-valuenow="{{ overall_progress }}" 
+                        aria-valuemin="0" aria-valuemax="100">{{ overall_progress }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-section">
+        <div class="d-flex justify-content-between align-items-center mb-4 fade-in" style="animation-delay: 0.4s">
+            <h2>Your Goals</h2>
+            <a href="{% url 'create_goal' %}" class="btn btn-primary action-btn slide-in-right" style="animation-delay: 0.5s">
+                <i class="fas fa-plus"></i> Create New Goal
+            </a>
+        </div>
+        
+        <div class="goals-grid">
+            {% if goals %}
+                {% for goal in goals %}
+                    <div class="slide-in-up" style="animation-delay: {{ forloop.counter|add:"4"|floatformat:1 }}s;">
+                        <div class="card goal-card {% if goal.goal_type == 'VAC' %}goal-type-vac{% elif goal.goal_type == 'EMF' %}goal-type-emf{% elif goal.goal_type == 'HDP' %}goal-type-hdp{% elif goal.goal_type == 'CAR' %}goal-type-car{% elif goal.goal_type == 'EDU' %}goal-type-edu{% elif goal.goal_type == 'RET' %}goal-type-ret{% elif goal.goal_type == 'DEB' %}goal-type-deb{% endif %}">
+                            <div class="card-header">
+                                {% if goal.goal_type == 'VAC' %}
+                                    <i class="fas fa-umbrella-beach goal-icon text-warning"></i>
+                                {% elif goal.goal_type == 'EMF' %}
+                                    <i class="fas fa-shield-alt goal-icon text-danger"></i>
+                                {% elif goal.goal_type == 'HDP' %}
+                                     <i class="fas fa-home goal-icon text-success"></i>
+                                {% elif goal.goal_type == 'CAR' %}
+                                    <i class="fas fa-car goal-icon text-primary"></i>
+                                {% elif goal.goal_type == 'EDU' %}
+                                    <i class="fas fa-graduation-cap goal-icon text-info"></i>
+                                {% elif goal.goal_type == 'RET' %}
+                                    <i class="fas fa-chair goal-icon text-secondary"></i>
+                                {% elif goal.goal_type == 'DEB' %}
+                                    <i class="fas fa-money-bill-wave goal-icon text-danger"></i>
+                                {% else %}
+                                    <i class="fas fa-star goal-icon text-primary"></i>
+                                {% endif %}
+                                <h5 class="card-title mb-1">{{ goal.name }}</h5>
+                                <h6 class="card-subtitle text-muted">{{ goal.get_goal_type_display }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mt-2">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="fw-bold">${{ goal.current_amount|floatformat:2 }}</span>
+                                        <span class="text-muted">${{ goal.target_amount|floatformat:2 }}</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar {% if goal.is_on_track %}bg-success{% else %}bg-warning{% endif %}" 
+                                             role="progressbar" 
+                                             style="width: 0%;" 
+                                             data-width="{{ goal.get_progress_percentage }}"
+                                             aria-valuenow="{{ goal.get_progress_percentage }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">{{ goal.get_progress_percentage }}%</div>
+                                    </div>
+                                </div>
+                                
+                                <p class="card-text mb-3">
+                                    <strong>Target Date:</strong> {{ goal.target_date|date:"M d, Y" }}
+                                </p>
+                                
+                                {% if goal.is_completed %}
+                                    <div class="status-badge completed">
+                                        <i class="fas fa-check-circle"></i> Goal Completed!
+                                    </div>
+                                {% else %}
+                                    <div class="status-badge {% if goal.is_on_track %}on-track{% else %}behind{% endif %}">
+                                        {% if goal.is_on_track %}
+                                            <i class="fas fa-check-circle"></i> On track
+                                        {% else %}
+                                            <i class="fas fa-exclamation-circle"></i> Falling behind
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-grid">
+                                    <a href="{% url 'goal_detail' goal.id %}" class="btn btn-primary action-btn">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12 fade-in" style="animation-delay: 0.6s">
+                    <div class="alert alert-info">
+                        <p>You haven't created any financial goals yet. Start by creating your first goal!</p>
+                        <a href="{% url 'create_goal' %}" class="btn btn-primary mt-2">
+                            <i class="fas fa-plus"></i> Create Your First Goal
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <div class="fade-in" style="animation-delay: 0.7s">
+            <h3 class="mb-4">Recent Contributions</h3>
+            <hr style="border-color: var(--border-color);">
+            {% if recent_contributions %}
+                <div class="table-container slide-in-up" style="animation-delay: 0.8s">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Goal</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contribution in recent_contributions %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'goal_detail' contribution.goal.id %}" class="fw-bold text-decoration-none">
+                                            {{ contribution.goal.name }}
+                                        </a>
+                                    </td>
+                                    <td>${{ contribution.amount|floatformat:2 }}</td>
+                                    <td>{{ contribution.date|date:"M d, Y" }}</td>
+                                    <td>{{ contribution.note|default:"-" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted slide-in-up" style="animation-delay: 0.8s">No recent contributions.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="dashboard-section text-center">
+        <div class="fade-in" style="animation-delay: 0.9s">
+            <a href="{% url 'generate_recommendations' %}" class="recommendations-btn pulse-btn">
+                <i class="fas fa-lightbulb"></i> Get Saving Recommendations
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Animate progress bars
+        setTimeout(function() {
+            $('.progress-bar').each(function() {
+                let width = $(this).data('width') + '%';
+                $(this).css('width', width);
+            });
+        }, 500);
+    });
+</script>
+{% endblock %}

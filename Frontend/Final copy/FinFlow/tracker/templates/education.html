@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+
+{% block title %}Financial Education Center | FinTrack{% endblock %}
+
+{% block content %}
+<div class="financial-education-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Financial Education Center</h1>
+            <p class="hero-subtitle">Enhance your financial knowledge and make smarter investment decisions</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="education-content">
+        <!-- Tips and Articles Section -->
+        <section class="education-section">
+            <div class="section-header">
+                <h2>Tips and Articles on Personal Finance</h2>
+                <p>Stay informed with our expert-written articles on managing your finances</p>
+            </div>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-image"></div>
+                    <h3>Budgeting Fundamentals</h3>
+                    <p>Learn how to create and maintain a budget that works for your lifestyle</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+                <div class="article-card">
+                    <div class="article-image"></div>
+                    <h3>Investment Strategies for Beginners</h3>
+                    <p>Start your investment journey with these proven strategies</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+                <div class="article-card">
+                    <div class="article-image"></div>
+                    <h3>Understanding Market Trends</h3>
+                    <p>How to analyze and respond to changing market conditions</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </div>
+            <div class="view-all-container">
+                <a href="#" class="view-all-btn">View All Articles</a>
+            </div>
+        </section>
+
+        <!-- Glossary Section -->
+        <section class="education-section glossary-section">
+            <div class="section-header">
+                <h2>Financial Term Glossary</h2>
+                <p>Build your financial literacy with our comprehensive glossary</p>
+            </div>
+            <div class="glossary-search">
+                <input type="text" placeholder="Search for a term..." class="search-input">
+                <button class="search-btn">Search</button>
+            </div>
+            <div class="glossary-alphabet">
+                <div class="alphabet-container">
+                    {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                    <a href="#{{ letter }}" class="alphabet-letter">{{ letter }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="popular-terms">
+                <h3>Popular Terms</h3>
+                <div class="terms-grid">
+                    <div class="term-card">
+                        <h4>ETF</h4>
+                        <p>Exchange-Traded Fund - A type of investment fund traded on stock exchanges.</p>
+                    </div>
+                    <div class="term-card">
+                        <h4>Diversification</h4>
+                        <p>The practice of spreading investments to reduce risk.</p>
+                    </div>
+                    <div class="term-card">
+                        <h4>Compound Interest</h4>
+                        <p>Interest calculated on the initial principal and accumulated interest.</p>
+                    </div>
+                    <div class="term-card">
+                        <h4>Market Capitalization</h4>
+                        <p>The total value of a company's outstanding shares of stock.</p>
+                    </div>
+                </div>
+                <div class="view-all-container">
+                    <a href="#" class="view-all-btn">View Full Glossary</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Tutorials Section -->
+        <section class="education-section video-section">
+            <div class="section-header">
+                <h2>Video Tutorials</h2>
+                <p>Learn how to use FinTrack's advanced features with our step-by-step guides</p>
+            </div>
+            <div class="videos-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <h3>Portfolio Analytics Dashboard</h3>
+                    <p>Master the analytics dashboard to gain insights into your investments</p>
+                    <a href="#" class="watch-video">Watch Video</a>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <h3>Setting Up Automated Alerts</h3>
+                    <p>Configure alerts to stay informed about important market changes</p>
+                    <a href="#" class="watch-video">Watch Video</a>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail"></div>
+                    <h3>Creating Custom Reports</h3>
+                    <p>Learn how to generate tailored reports for your investment strategy</p>
+                    <a href="#" class="watch-video">Watch Video</a>
+                </div>
+            </div>
+            <div class="view-all-container">
+                <a href="#" class="view-all-btn">View All Tutorials</a>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="newsletter-content">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for the latest financial tips and educational content</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Financial Education Center Styles - Dark Mode */
+    :root {
+        --primary-color: #3366ff;
+        --primary-dark: #1a4cd9;
+        --secondary-color: #1a2233;
+        --text-color: #e6e6e6;
+        --dark-bg: #121212;
+        --card-bg: #1e1e1e;
+        --border-color: #2c2c2c;
+        --accent-color: #4dabf7;
+        --muted-text: #a0a0a0;
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+    }
+
+    .financial-education-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary-color), #1a53ff);
+        color: white;
+        border-radius: 12px;
+        padding: 60px 40px;
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2.8rem;
+        margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Section Styles */
+    .education-section {
+        margin: 60px 0;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .section-header p {
+        color: var(--text-color);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Articles Grid */
+    .articles-grid, .terms-grid, .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .article-card, .term-card, .video-card {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--border-color);
+    }
+
+    .article-card:hover, .term-card:hover, .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .article-image, .video-thumbnail {
+        height: 160px;
+        background-color: var(--secondary-color);
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 15a35 35 0 1 0 0 70 35 35 0 0 0 0-70zm0 5a30 30 0 1 1 0 60 30 30 0 0 1 0-60zm0 5a25 25 0 1 0 0 50 25 25 0 0 0 0-50zm0 5a20 20 0 1 1 0 40 20 20 0 0 1 0-40z' fill='%233366ff' fill-opacity='0.3'/%3E%3C/svg%3E");
+        background-size: 30%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .article-card h3, .video-card h3 {
+        padding: 20px 20px 10px;
+        color: var(--text-color);
+        font-size: 1.2rem;
+    }
+
+    .article-card p, .video-card p {
+        padding: 0 20px 20px;
+        color: var(--muted-text);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .read-more, .watch-video {
+        display: block;
+        padding: 12px 20px;
+        background-color: rgba(51, 102, 255, 0.2);
+        color: var(--primary-color);
+        text-align: center;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .read-more:hover, .watch-video:hover {
+        background-color: rgba(51, 102, 255, 0.3);
+    }
+
+    /* Term Cards */
+    .term-card {
+        padding: 20px;
+    }
+
+    .term-card h4 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    .term-card p {
+        color: var(--muted-text);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Glossary Section */
+    .glossary-section {
+        background-color: var(--secondary-color);
+        padding: 40px;
+        border-radius: 12px;
+    }
+
+    .glossary-search {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px 0 0 6px;
+        font-size: 1rem;
+        background-color: #242424;
+        color: var(--text-color);
+    }
+
+    .search-btn {
+        padding: 12px 24px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0 6px 6px 0;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background-color: var(--primary-dark);
+    }
+
+    .glossary-alphabet {
+        margin: 30px 0;
+    }
+
+    .alphabet-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .alphabet-letter {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        background-color: #242424;
+        color: var(--primary-color);
+        border-radius: 50%;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .alphabet-letter:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .popular-terms h3 {
+        text-align: center;
+        margin-bottom: 24px;
+        color: var(--text-color);
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+        background: linear-gradient(to right, #1a4cd9, #3366ff);
+        border-radius: 12px;
+        padding: 50px;
+        margin: 60px 0;
+    }
+
+    .newsletter-content {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        color: white;
+    }
+
+    .newsletter-content h2 {
+        font-size: 2rem;
+        margin-bottom: 16px;
+    }
+
+    .newsletter-content p {
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+    }
+
+    .newsletter-form {
+        display: flex;
+        gap: 10px;
+    }
+
+    .newsletter-form input {
+        flex: 1;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .newsletter-form input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .newsletter-form button {
+        padding: 14px 24px;
+        background-color: white;
+        color: var(--primary-color);
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .newsletter-form button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* View All Buttons */
+    .view-all-container {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .view-all-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .view-all-btn:hover {
+        background-color: var(--primary-dark);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        
+        .articles-grid, .terms-grid, .videos-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .newsletter-form {
+            flex-direction: column;
+        }
+        
+        .glossary-section {
+            padding: 30px 20px;
+        }
+    }
+</style>
+{% endblock %}

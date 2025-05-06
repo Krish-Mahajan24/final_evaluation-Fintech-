@@ -1,0 +1,562 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FinTrack - About Us{% endblock %}
+
+{% block content %}
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-card: #2d2d2d;
+            --dark-text: #e0e0e0;
+            --dark-text-muted: #9e9e9e;
+            --dark-border: #333333;
+            --primary: #4f46e5;
+            --primary-hover: #6366f1;
+            --primary-dark: #3730a3;
+            --secondary: #0c4a6e;
+            --accent-1: #3a4cb1;
+            --accent-2: #006064;
+            --accent-3: #6a1b9a;
+            --accent-4: #546e7a;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .text-muted {
+            color: var(--dark-text-muted) !important;
+        }
+        
+        section {
+            padding: 5rem 0;
+        }
+        
+        .page-header {
+            background-color: var(--primary-dark);
+            padding: 6rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(58, 76, 177, 0.2) 0%, rgba(0, 96, 100, 0.2) 100%);
+            z-index: 1;
+        }
+        
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .team-card {
+            background-color: var(--dark-card);
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--dark-border);
+            text-align: center;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .team-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 3px solid var(--primary);
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 3rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background-color: var(--primary);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-content {
+            background-color: var(--dark-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            width: calc(50% - 30px);
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            left: -40px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: -40px;
+        }
+        
+        .timeline-year {
+            position: absolute;
+            top: 20px;
+            width: 120px;
+            text-align: center;
+            padding: 5px 10px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year {
+            left: -160px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-year {
+            right: -160px;
+        }
+        
+        .value-card {
+            background-color: var(--dark-card);
+            border-radius: 10px;
+            padding: 2rem;
+            height: 100%;
+            border: 1px solid var(--dark-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .value-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-card {
+            background: linear-gradient(145deg, var(--dark-card), var(--dark-surface));
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary) 0%, #9f7aea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .contact-info {
+            background-color: var(--dark-card);
+            border-radius: 10px;
+            padding: 2rem;
+            height: 100%;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 767px) {
+            .timeline::before {
+                left: 31px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px !important;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -40px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-year,
+            .timeline-item:nth-child(even) .timeline-year {
+                left: -95px;
+                width: 80px;
+            }
+        }
+    </style>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container text-center">
+            <h1 class="display-5 mb-4">About FinTrack</h1>
+            <p class="lead mb-5">We're on a mission to empower investors with intelligent portfolio tracking solutions</p>
+        </div>
+    </header>
+
+    <!-- Our Story -->
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="{% static 'about.jpg' %}" alt="Our story" class="img-fluid rounded-4 shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Our Story</h2>
+                    <p class="mb-4">FinTrack was born out of frustration. In 2019, three finance professionals struggled to find a user-friendly yet powerful tool to track their diverse investment portfolios. Excel spreadsheets were cumbersome, and existing solutions lacked the analytical depth they desired.</p>
+                    <p class="mb-4">They envisioned a platform that combined sophisticated investment analytics with an intuitive user interface, accessible to both novice investors and financial experts alike. This vision became FinTrack.</p>
+                    <p>Today, FinTrack serves over 10,000 investors worldwide, from individual retail investors to professional financial advisors. We're committed to continuous innovation and helping our users make data-driven investment decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section style="background-color: var(--dark-surface);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Our Core Values</h2>
+                <p class="text-muted">The principles that guide everything we do</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h4>Trust & Security</h4>
+                        <p class="text-muted">We prioritize the security of your data and maintain the highest standards of privacy protection.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p class="text-muted">We constantly push the boundaries of financial technology to provide cutting-edge portfolio management tools.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>User-Focused</h4>
+                        <p class="text-muted">Every feature we develop is designed with our users' needs and feedback as the top priority.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Financial Empowerment</h4>
+                        <p class="text-muted">We believe in democratizing financial intelligence to help investors of all levels succeed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Stats -->
+    <section>
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="mb-3">FinTrack by the Numbers</h2>
+                <p class="text-muted">Our growth and impact since launching in 2019</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-number">10K+</div>
+                        <h5>Active Users</h5>
+                        <p class="text-muted">Investors who trust FinTrack daily</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-number">$2.5B</div>
+                        <h5>Assets Tracked</h5>
+                        <p class="text-muted">Total portfolio value managed</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-number">42</div>
+                        <h5>Team Members</h5>
+                        <p class="text-muted">Talented professionals globally</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-number">14</div>
+                        <h5>Countries</h5>
+                        <p class="text-muted">Global presence and growing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Journey -->
+    <section style="background-color: var(--dark-surface);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Our Journey</h2>
+                <p class="text-muted">Key milestones in FinTrack's evolution</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2019</div>
+                        <h4>The Beginning</h4>
+                        <p class="text-muted">FinTrack was founded by three finance professionals with a vision to create the ultimate portfolio tracking solution.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2020</div>
+                        <h4>First 1,000 Users</h4>
+                        <p class="text-muted">We reached our first major user milestone and secured seed funding to accelerate development.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2021</div>
+                        <h4>Mobile App Launch</h4>
+                        <p class="text-muted">We expanded our platform with native iOS and Android apps, allowing users to track investments on the go.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2022</div>
+                        <h4>Series A Funding</h4>
+                        <p class="text-muted">We secured $8M in Series A funding to expand our team and enhance our analytics capabilities.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2023</div>
+                        <h4>10,000 Users</h4>
+                        <p class="text-muted">We celebrated reaching 10,000 active users and launched our advanced AI-powered insights feature.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024</div>
+                        <h4>Global Expansion</h4>
+                        <p class="text-muted">We expanded our presence to 14 countries and introduced multi-currency portfolio support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Leadership Team -->
+<section>
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Our Leadership Team</h2>
+            <p class="text-muted">Meet the experts behind FinTrack</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card">
+                    <img src="{% static 'about_leadership_1.jpg' %}" alt="Founder" class="team-img">
+                    <h4>Karanpal Singh</h4>
+                    <p class="text-primary mb-1">Founder & CEO</p>
+                    <br>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card">
+                    <img src="{% static 'about_leadership_2.jpg' %}" alt="Co-Founder 1" class="team-img">
+                    <h4>Krish Mahajan</h4>
+                    <p class="text-primary mb-1">Co-Founder & CTO</p>
+                    <br>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card">
+                    <img src="{% static 'About_leadership_3.jpg' %}" alt="Co-Founder 2" class="team-img">
+                    <h4>Arshveen Singh</h4>
+                    <p class="text-primary mb-1">Co-Founder & CPO</p>
+                    <br>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-medium"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card">
+                    <img src="{% static 'yashit.jpg' %}" alt="Co-Founder 3" class="team-img">
+                    <h4>Yashit Mital</h4>
+                    <p class="text-primary mb-1">Co-Founder & COO</p>
+                    <br>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Locations & Contact -->
+    <section style="background-color: var(--dark-surface);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Our Locations</h2>
+                <p class="text-muted">Find us around the world</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="d-flex mb-4">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h5>Chandigarh</h5>
+                                <p class="text-muted">Headquarters</p>
+                            </div>
+                        </div>
+                        <p class="text-muted">Sector 22<br>Chandigarh, CA 94107</p>
+                        <p class="mb-0"><i class="fas fa-phone me-2 text-primary"></i> 79019 99561</p>
+                        <p><i class="fas fa-envelope me-2 text-primary"></i> Ch@fintrack.com</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="d-flex mb-4">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h5>New York</h5>
+                                <p class="text-muted">East Coast Hub</p>
+                            </div>
+                        </div>
+                        <p class="text-muted">456 Wall Street, 15th Floor<br>New York, NY 10005</p>
+                        <p class="mb-0"><i class="fas fa-phone me-2 text-primary"></i> (212) 555-0456</p>
+                        <p><i class="fas fa-envelope me-2 text-primary"></i> nyc@fintrack.com</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="d-flex mb-4">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h5>London</h5>
+                                <p class="text-muted">European Office</p>
+                            </div>
+                        </div>
+                        <p class="text-muted">789 Financial Avenue<br>London, UK EC2R 8AH</p>
+                        <p class="mb-0"><i class="fas fa-phone me-2 text-primary"></i> +44 20 7946 0789</p>
+                        <p><i class="fas fa-envelope me-2 text-primary"></i> london@fintrack.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container text-center">
+            <h2 class="mb-4">Join Our Growing Community</h2>
+            <p class="lead mb-4">Experience the power of FinTrack's intelligent portfolio management tools today.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'signup'%}" class="btn btn-light btn-lg">Start Free Trial</a>
+                <a href="{% url 'contact'%}" class="btn btn-outline-light btn-lg">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

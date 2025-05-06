@@ -1,0 +1,446 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Contribution | {{ goal.name }} | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+       :root {
+    --primary-color: #7289da;
+    --secondary-color: #5865f2;
+    --accent-color: #4cc9f0;
+    --dark-bg: #121212;
+    --darker-bg: #1a1a1a;
+    --card-bg: #1e1e1e;
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --text-muted: #848484;
+    --border-color: #333333;
+    --input-bg: #2c2c2c;
+    --input-border: #474747;
+    --btn-hover: #2c2f33;
+    --button-bg: #2d2d2d;
+    --danger-color: #ed4245;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    --transition-speed: 0.3s;
+}
+
+body {
+    background-color: var(--dark-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-primary);
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    transform: translateY(0);
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--secondary-color);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+h2 {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 60px;
+    background: var(--accent-color);
+    border-radius: 2px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    transition: all var(--transition-speed);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.input-group-text {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: var(--darker-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-secondary);
+}
+
+.amount-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    margin-top: 1rem;
+}
+
+.amount-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: var(--button-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.amount-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(114, 137, 218, 0.3);
+}
+
+.amount-button:active {
+    transform: translateY(0);
+}
+
+.btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all var(--transition-speed);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    box-shadow: 0 4px 10px rgba(114, 137, 218, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(114, 137, 218, 0.4);
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--btn-hover);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Input field animation */
+.input-focus-effect {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-focus-effect label {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card-bg);
+    padding: 0 5px;
+    color: var(--text-secondary);
+    transition: all var(--transition-speed);
+    pointer-events: none;
+}
+
+.input-focus-effect input:focus ~ label,
+.input-focus-effect input:not(:placeholder-shown) ~ label {
+    top: 0;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+}
+
+/* Form sections animation */
+.form-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.5s forwards;
+}
+
+.form-section:nth-child(1) { animation-delay: 0.1s; }
+.form-section:nth-child(2) { animation-delay: 0.2s; }
+.form-section:nth-child(3) { animation-delay: 0.3s; }
+.form-section:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress indicator */
+.progress-container {
+    margin-bottom: 2rem;
+}
+
+.progress {
+    height: 6px;
+    border-radius: 3px;
+    background-color: var(--darker-bg);
+}
+
+.progress-bar {
+    background-color: var(--accent-color);
+    width: 0;
+    animation: progressGrow 1s ease-out forwards;
+}
+
+@keyframes progressGrow {
+    to { width: 100%; }
+}
+
+/* Custom animation styles */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.active-amount {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.is-focused {
+    transform: translateY(-3px);
+}
+
+/* Select dropdown styling */
+select option {
+    background-color: var(--darker-bg);
+    color: var(--text-primary);
+}
+
+/* Focus state for textarea */
+textarea:focus {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+
+/* Autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text-primary);
+    -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+</style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="form-container">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'goal_list' %}"><i class="fas fa-home me-1"></i>Goals</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'goal_detail' goal.id %}">{{ goal.name }}</a></li>
+                            <li class="breadcrumb-item active">Add Contribution</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar"></div>
+                </div>
+            </div>
+            
+            <h2 class="mb-4">Add Contribution to "{{ goal.name }}"</h2>
+            
+            <form method="post" action="{% url 'add_contribution' goal.id %}">
+                {% csrf_token %}
+                
+                <div class="form-section mb-4">
+                    <label for="amount" class="form-label">Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+                    </div>
+                    
+                    <div class="amount-buttons mt-2">
+                        <button type="button" class="amount-button" onclick="setAmount(5)">$5</button>
+                        <button type="button" class="amount-button" onclick="setAmount(10)">$10</button>
+                        <button type="button" class="amount-button" onclick="setAmount(25)">$25</button>
+                        <button type="button" class="amount-button" onclick="setAmount(50)">$50</button>
+                        <button type="button" class="amount-button" onclick="setAmount(100)">$100</button>
+                    </div>
+                </div>
+                
+                <div class="form-section mb-4">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" value="{{ today|date:'Y-m-d' }}" required>
+                </div>
+                
+                <div class="form-section mb-4">
+                    <label for="notes" class="form-label">Notes (Optional)</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                </div>
+                
+                <div class="form-section mb-4">
+                    <label for="source" class="form-label">Source (Optional)</label>
+                    <select class="form-select" id="source" name="source">
+                        <option value="">Select a source</option>
+                        <option value="salary">Salary</option>
+                        <option value="bonus">Bonus</option>
+                        <option value="investment">Investment Return</option>
+                        <option value="gift">Gift</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-5 form-section">
+                    <a href="{% url 'goal_detail' goal.id %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Contribution
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function setAmount(value) {
+            document.getElementById('amount').value = value;
+            
+            // Add animation for selection
+            const buttons = document.querySelectorAll('.amount-button');
+            buttons.forEach(btn => btn.classList.remove('active-amount'));
+            
+            // Find the clicked button and add active class
+            const clickedButton = document.querySelector(`.amount-button[onclick="setAmount(${value})"]`);
+            if (clickedButton) {
+                clickedButton.classList.add('active-amount');
+                
+                // Add pulse animation
+                clickedButton.style.animation = 'none';
+                setTimeout(() => {
+                    clickedButton.style.animation = 'pulse 0.5s';
+                }, 10);
+            }
+            
+            // Animate the input field
+            const amountInput = document.getElementById('amount');
+            amountInput.style.transition = 'all 0.3s';
+            amountInput.style.backgroundColor = '#f0f7ff';
+            setTimeout(() => {
+                amountInput.style.backgroundColor = '#fff';
+            }, 500);
+        }
+        
+        // Add input focus effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.form-control, .form-select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('is-focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('is-focused');
+                });
+            });
+            
+            // Add animation to buttons on hover
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s';
+                });
+            });
+        });
+        
+        // Add keyframe animations
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            
+            .active-amount {
+                background-color: var(--primary-color);
+                color: white;
+            }
+            
+            .is-focused {
+                transform: translateY(-3px);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card" style="background-color: #161b22; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #21262d; color: #58a6ff;">
+                    <h3>Financial Summary</h3>
+                    <a href="{% url 'add_transaction' %}" class="btn" style="background-color: #238636; color: white;">Add Transaction</a>
+                </div>
+                <div class="card-body" style="color: #c9d1d9;">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center" style="background-color: #0d1117; border: 1px solid #30363d;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: #58a6ff;">Total Income</h5>
+                                    <h3 id="totalIncome" style="color: #3fb950;">$0.00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center" style="background-color: #0d1117; border: 1px solid #30363d;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: #58a6ff;">Total Expenses</h5>
+                                    <h3 id="totalExpenses" style="color: #f85149;">$0.00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center" style="background-color: #0d1117; border: 1px solid #30363d;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: #58a6ff;">Balance</h5>
+                                    <h3 id="totalBalance" style="color: #f85149;">Insufficient Balance</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card" style="background-color: #0d1117; border: 1px solid #30363d;">
+                                <div class="card-header" style="background-color: #21262d; color: #58a6ff;">
+                                    <h5>Transactions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <select id="monthFilter" class="form-control" style="background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d;">
+                                                    <option value="all">All Months</option>
+                                                    <option value="1">January</option>
+                                                    <option value="2">February</option>
+                                                    <option value="3">March</option>
+                                                    <option value="4">April</option>
+                                                    <option value="5">May</option>
+                                                    <option value="6">June</option>
+                                                    <option value="7">July</option>
+                                                    <option value="8">August</option>
+                                                    <option value="9">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="yearFilter" class="form-control" style="background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d;">
+                                                   
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="categoryFilter" class="form-control" style="background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d;">
+                                                    <option value="all">All Categories</option>
+                                                   
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="applyFilters" class="btn" style="background-color: #238636; color: white;">Apply Filters</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Type</th>
+                                                    <th>Category</th>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="transactionsTable">
+                                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Populate year filter with current year and previous 5 years
+        const yearFilter = document.getElementById('yearFilter');
+        const currentYear = new Date().getFullYear();
+        
+        for (let i = 0; i < 6; i++) {
+            const year = currentYear - i;
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        }
+        
+        // Load categories for filter
+        fetch('/api/categories/')
+            .then(response => response.json())
+            .then(data => {
+                const categoryFilter = document.getElementById('categoryFilter');
+                
+                data.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categoryFilter.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading categories:', error));
+        
+        // Load summary data
+        loadSummaryData();
+        
+        // Load transactions (initially without filters)
+        loadTransactions();
+        
+        // Add event listener to filter button
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            loadTransactions();
+        });
+    });
+    
+    function loadSummaryData() {
+        fetch('/api/summary/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalIncome').textContent = '$' + data.total_income.toFixed(2);
+                document.getElementById('totalExpenses').textContent = '$' + data.total_expenses.toFixed(2);
+                document.getElementById('totalBalance').textContent = '$' + data.total_balance.toFixed(2);
+                
+                // Color coding for balance
+                const balanceElement = document.getElementById('totalBalance');
+                if (data.total_balance > 0) {
+                balanceElement.textContent = '$' + data.total_balance.toFixed(2);
+                balanceElement.style.color = '#3fb950'; // Green for positive
+            } else if (data.total_balance < 0) {
+                balanceElement.textContent = '⚠ Insufficient Balance!';
+                balanceElement.style.color = '#f85149'; // Red for negative
+            } else {
+                balanceElement.textContent = '$0.00';
+                balanceElement.style.color = 'gray'; // Neutral color for zero
+            }
+        })
+            .catch(error => console.error('Error loading summary:', error));
+    }
+    
+    function loadTransactions() {
+        // Get filter values
+        const month = document.getElementById('monthFilter').value;
+        const year = document.getElementById('yearFilter').value;
+        const category = document.getElementById('categoryFilter').value;
+        
+        // Build query string
+        let url = '/api/transactions/?';
+        if (month && month !== 'all') url += 'month=' + month + '&';
+        if (year) url += 'year=' + year + '&';
+        if (category && category !== 'all') url += 'category=' + category + '&';
+        
+        // Remove trailing '&' if any
+        url = url.endsWith('&') ? url.slice(0, -1) : url;
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('transactionsTable');
+                tableBody.innerHTML = ''; // Clear existing rows
+                
+                if (data.length === 0) {
+                    // Display a "no transactions" message
+                    const emptyRow = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 6;
+                    cell.textContent = 'No transactions found.';
+                    cell.style.textAlign = 'center';
+                    emptyRow.appendChild(cell);
+                    tableBody.appendChild(emptyRow);
+                } else {
+                    // Display transactions
+                    data.forEach(transaction => {
+                        const row = document.createElement('tr');
+                        
+                        // Date cell
+                        const dateCell = document.createElement('td');
+                        dateCell.textContent = transaction.date;
+                        row.appendChild(dateCell);
+                        
+                        // Type cell
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = transaction.type;
+                        if (transaction.type === 'Income') {
+                            typeCell.style.color = '#3fb950'; // Green for income
+                        } else {
+                            typeCell.style.color = '#f85149'; // Red for expense
+                        }
+                        row.appendChild(typeCell);
+                        
+                        // Category cell
+                        const categoryCell = document.createElement('td');
+                        categoryCell.textContent = transaction.category_name;
+                        row.appendChild(categoryCell);
+                        
+                        // Description cell
+                        const descriptionCell = document.createElement('td');
+                        descriptionCell.textContent = transaction.description;
+                        row.appendChild(descriptionCell);
+                        
+                        // Amount cell
+                        const amountCell = document.createElement('td');
+                        amountCell.textContent = '$' + transaction.amount.toFixed(2);
+                        if (transaction.type === 'Income') {
+                            amountCell.style.color = '#3fb950'; 
+                        } else {
+                            amountCell.style.color = '#f85149'; 
+                        }
+                        row.appendChild(amountCell);
+                        
+                     
+                        const actionsCell = document.createElement('td');
+                        
+                        // Edit button
+                        const editButton = document.createElement('a');
+                        editButton.href = '/edit_transaction/' + transaction.id + '/';
+                        editButton.className = 'btn btn-sm mr-2';
+                        editButton.style.backgroundColor = '#58a6ff';
+                        editButton.style.color = 'white';
+                        editButton.textContent = 'Edit';
+                        editButton.style.marginRight = '15px'; 
+                        actionsCell.appendChild(editButton);
+
+                        
+                        
+                        // Delete button
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn btn-sm';
+                        deleteButton.style.backgroundColor = '#f85149';
+                        deleteButton.style.color = 'white';
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = function() {
+                            deleteTransaction(transaction.id);
+                        };
+                        actionsCell.appendChild(deleteButton);
+                        
+                        row.appendChild(actionsCell);
+                        
+                        tableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading transactions:', error));
+    }
+    
+    function deleteTransaction(id) {
+        if (confirm('Are you sure you want to delete this transaction?')) {
+            fetch('/api/transactions/' + id + '/delete/', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    loadTransactions();
+                    loadSummaryData();
+                } else {
+                    alert('Failed to delete transaction');
+                }
+            })
+            .catch(error => console.error('Error deleting transaction:', error));
+        }
+    }
+    
+  
+    function getCsrfToken() { 
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Much Do I Need to Retire? | Mint</title>
+    <style>
+        :root {
+            --primary-color: #2c9644;
+            --text-color: #333;
+            --background-color: #fff;
+            --secondary-color: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            line-height: 1.8;
+            color: var(--text-color);
+            background: linear-gradient(to bottom, #f0f9f0, #ffffff);
+            
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2d3436;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+
+        }
+
+        .author {
+            color: #636e72;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #2d3436;
+        }
+
+        .calculator-section {
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .calculator-form {
+            display: grid;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #217a36;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .section {
+            margin: 3rem 0;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #2d3436;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .calculator-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .calculator-form {
+                gap: 0.8rem;
+            }
+
+            .calculator-section {
+                padding: 1rem;
+            }
+
+            input {
+                padding: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>How Much Do I Need to Retire?</h1>
+            <div class="author">Written by Mint</div>
+        </header>
+
+        <main>
+            <p>Daydreaming about retirement can be easy—you get to do what you want, whenever you want, whether it means traveling across the world or picking up a new hobby. But at the same time, the thought of retirement can be daunting, especially when it comes to figuring out how you're going to support yourself financially.</p>
+
+            <p>Many workers ask themselves, "how much do I need to retire?" There isn't a clear-cut answer, as the amount of money you need to save for retirement depends on a variety of factors, such as your income and the type of lifestyle you want to live during your golden years. In order to have a substantial nest egg to support you throughout retirement, you'll want to consider preparing, saving, and investing as early as possible.</p>
+
+            <p>To help you get a jump start on retirement planning, we've created this guide on how much you need to save for retirement and different ways you can begin planning for retirement.</p>
+
+            <div>
+            <section class="calculator-section">
+                <h2>Calculate How Much You Need for Retirement</h2>
+                <form class="calculator-form" id="retirementCalculator">
+                    <div class="form-group">
+                        <label for="currentAge">Current Age</label>
+                        <input type="number" id="currentAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="retirementAge">Planned Retirement Age</label>
+                        <input type="number" id="retirementAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentIncome">Current Annual Income</label>
+                        <input type="number" id="currentIncome" required>
+                    </div>
+                    <button type="submit">Calculate Retirement Needs</button>
+                    <div class="result" id="calculatorResult">
+                        <h3>Your Retirement Estimate</h3>
+                        <p id="resultText"></p>
+                    </div>
+                </form>
+            </section>
+
+            <section class="section">
+                <h2>Essential Aspects of Retirement Planning</h2>
+                <p>In this retirement series, we'll be providing you with an overview of the essential aspects of retirement planning, like how much you need to save from your paycheck to prepare for retirement, the best ways to start saving for retirement, some 401(k) basics, and other important information.</p>
+            </section>
+
+            <section class="section">
+                <p>In this chapter, we'll be answering important questions like "how much money do I need to retire?" and "how do I save for retirement?" Continue reading to get started.</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('retirementCalculator').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentAge = parseInt(document.getElementById('currentAge').value);
+            const retirementAge = parseInt(document.getElementById('retirementAge').value);
+            const currentIncome = parseInt(document.getElementById('currentIncome').value);
+            
+            const retirementNeeds = currentIncome * 25;
+            const yearsToSave = retirementAge - currentAge;
+            const annualSavingsNeeded = retirementNeeds / yearsToSave;
+            
+            const resultDiv = document.getElementById('calculatorResult');
+            const resultText = document.getElementById('resultText');
+            
+            resultText.innerHTML = `
+                Based on the 4% rule, you'll need approximately $${retirementNeeds.toLocaleString()} saved for retirement.<br><br>
+                To reach this goal, you should aim to save about $${Math.round(annualSavingsNeeded).toLocaleString()} per year for the next ${yearsToSave} years.<br><br>
+                This is a simple estimate. Consider consulting a financial advisor for a more detailed retirement plan.
+            `;
+            
+            resultDiv.style.display = 'block';
+        });
+
+        const result = document.querySelector('.result');
+        result.style.transition = 'opacity 0.5s ease-in-out';
+    </script>
+</body>
+</html>

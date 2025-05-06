@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Transaction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-8 offset-md-2">
+            <div class="card" style="background-color: #161b22; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                <div class="card-header" style="background-color: #21262d; color: #58a6ff;">
+                    <h3>Edit Transaction</h3>
+                </div>
+                <div class="card-body" style="color: #c9d1d9;">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.date.id_for_label }}">Date</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="invalid-feedback d-block">{{ form.date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.type.id_for_label }}">Transaction Type</label>
+                            {{ form.type }}
+                            {% if form.type.errors %}
+                                <div class="invalid-feedback d-block">{{ form.type.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.category.id_for_label }}">Category</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="invalid-feedback d-block">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.amount.id_for_label }}">Amount</label>
+                            {{ form.amount }}
+                            {% if form.amount.errors %}
+                                <div class="invalid-feedback d-block">{{ form.amount.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn" style="background-color: #238636; color: white;">Update Transaction</button>
+                            <a href="{% url 'dashboard' %}" class="btn" style="background-color: #21262d; color: #c9d1d9; margin-left: 10px;">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Style all form elements
+    document.addEventListener('DOMContentLoaded', function() {
+        const formElements = document.querySelectorAll('input, select');
+        formElements.forEach(el => {
+            el.classList.add('form-control');
+            el.style.backgroundColor = '#0d1117';
+            el.style.color = '#c9d1d9';
+            el.style.border = '1px solid #30363d';
+        });
+    });
+    
+    function updateCategories(transactionType) {
+        // Fetch categories filtered by transaction type
+        fetch(`/api/categories/?type=${transactionType}`)
+            .then(response => response.json())
+            .then(data => {
+                const categorySelect = document.getElementById('id_category');
+                const currentValue = categorySelect.value;
+                categorySelect.innerHTML = '';
+                
+                // Add empty option
+                const emptyOption = document.createElement('option');
+                emptyOption.value = '';
+                emptyOption.textContent = '-- Select Category --';
+                categorySelect.appendChild(emptyOption);
+                
+                // Add categories from the API
+                data.forEach(category => {
+                    if (category.type === transactionType) {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        
+                        // Restore selected option if it's valid for this type
+                        if (category.id == currentValue) {
+                            option.selected = true;
+                        }
+                        
+                        categorySelect.appendChild(option);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching categories:', error));
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,852 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Goal | {{ goal.name }} | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+:root {
+    --primary-color: #7289da;
+    --secondary-color: #5865f2;
+    --accent-color: #4dabf7;
+    --dark-bg: #121212;
+    --darker-bg: #1a1a1a;
+    --card-bg: #1e1e1e;
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --text-muted: #848484;
+    --border-color: #333333;
+    --input-bg: #2c2c2c;
+    --input-border: #474747;
+    --btn-hover: #2c2f33;
+    --danger-color: #ed4245;
+    --border-radius: 12px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: var(--dark-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-primary);
+}
+
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: var(--darker-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 18px 20px;
+    color: var(--text-primary);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+h2, h5 {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.input-group-text {
+    background-color: var(--darker-bg);
+    border-color: var(--input-border);
+    color: var(--text-secondary);
+}
+
+.form-text {
+    color: var(--text-muted);
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border-color: var(--input-border);
+    color: var(--text-secondary);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--btn-hover);
+    color: var(--text-primary);
+    border-color: var(--input-border);
+}
+
+.btn-secondary {
+    background-color: var(--darker-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--btn-hover);
+    border-color: var(--border-color);
+}
+
+.btn-outline-danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+    transition: var(--transition);
+}
+
+.btn-outline-danger:hover {
+    background-color: rgba(237, 66, 69, 0.1);
+    color: var(--danger-color);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.delete-btn {
+    color: var(--danger-color);
+}
+
+.goal-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.goal-type-card {
+    background: var(--darker-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    padding: 15px 10px;
+    text-align: center;
+    transition: var(--transition);
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.goal-type-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+.goal-type-card.selected {
+    border: 2px solid var(--primary-color);
+    background-color: rgba(114, 137, 218, 0.15);
+}
+
+.goal-type-card.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--primary-color);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.goal-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.goal-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.goal-icon-name {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+}
+
+.milestone-item {
+    background-color: var(--darker-bg);
+    padding: 16px;
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.milestone-item:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.milestone-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.breadcrumb-item a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+.image-preview {
+    max-height: 150px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.image-preview:hover {
+    transform: scale(1.05);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-close {
+    color: var(--text-primary);
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Custom SVG Icons */
+.svg-vacation {
+    fill: #ffd166;
+}
+
+.svg-emergency {
+    fill: #ef476f;
+}
+
+.svg-house {
+    fill: #06d6a0;
+}
+
+.svg-vehicle {
+    fill: #118ab2;
+}
+
+.svg-education {
+    fill: #073b4c;
+}
+
+.svg-retirement {
+    fill: #7209b7;
+}
+
+.svg-debt {
+    fill: #d62828;
+}
+
+.svg-other {
+    fill: #4361ee;
+}
+
+/* Form check styling */
+.form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Select dropdown styling */
+option {
+    background-color: var(--darker-bg);
+    color: var(--text-primary);
+}
+
+/* File input styling */
+input[type="file"]::file-selector-button {
+    background-color: var(--darker-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--input-border);
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: var(--btn-hover);
+    color: var(--text-primary);
+}
+
+/* Make sure images are properly visible against dark backgrounds */
+.img-thumbnail {
+    background-color: var(--darker-bg);
+    border-color: var(--border-color);
+}
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="row mb-4 fade-in">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Goals</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'goal_detail' goal.id %}">{{ goal.name }}</a></li>
+                        <li class="breadcrumb-item active">Edit Goal</li>
+                    </ol>
+                </nav>
+                <h2 class="slide-up">Edit Goal</h2>
+            </div>
+        </div>
+        
+        <form method="post" action="{% url 'edit_goal' goal.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="card slide-up" style="animation-delay: 0.1s;">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Goal Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ goal.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Goal Type</label>
+                        <input type="hidden" id="selected_icon" name="icon" value="{{ goal.icon }}">
+                        <div class="goal-icon-grid">
+                            <!-- Vacation -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-umbrella-beach' %}selected{% endif %}" data-icon="fa-umbrella-beach">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-vacation">
+                                        <path d="M80,55c0-6.63-5.37-12-12-12s-12,5.37-12,12c0,0.34,0.02,0.67,0.05,1H20.05 C20.02,55.67,20,55.34,20,55c0-6.63,5.37-12,12-12s12,5.37,12,12c0,0.34-0.02,0.67-0.05,1h24.1C68.02,55.67,68,55.34,68,55z M22,49 h56v-4H22V49z M25,65h50v20H25V65z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Vacation</p>
+                            </div>
+                            
+                            <!-- Emergency Fund -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-shield-alt' %}selected{% endif %}" data-icon="fa-shield-alt">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-emergency">
+                                        <path d="M50,10L20,25v25c0,19.3,12.87,37.29,30,42.5c17.13-5.21,30-23.2,30-42.5V25L50,10z M50,80.83 C37.83,76.38,28,60.79,28,50V30.5L50,19.5l22,11V50C72,60.79,62.17,76.38,50,80.83z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Emergency Fund</p>
+                            </div>
+                            
+                            <!-- House Down Payment -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-house' %}selected{% endif %}" data-icon="fa-house">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-house">
+                                        <path d="M80,55.82V90H20V55.82L50,30L80,55.82z M50,15L10,50h15v45h50V50h15L50,15z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">House Down Payment</p>
+                            </div>
+                            
+                            <!-- Vehicle -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-car' %}selected{% endif %}" data-icon="fa-car">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-vehicle">
+                                        <path d="M80,50h-5l-8-20H33l-8,20h-5v10h5v10h5v5h45v-5h5V60h5V50z M35,35h30l5,15H30L35,35z M30,65h40v5H30V65z M30,55h5v5h5v-5h20v5h5v-5h5v5H30V55z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Vehicle</p>
+                            </div>
+                            
+                            <!-- Education -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-graduation-cap' %}selected{% endif %}" data-icon="fa-graduation-cap">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-education">
+                                        <path d="M50,30L25,40l25,10l20-8v18c0,5.5-8.97,10-20,10s-20-4.5-20-10V42L10,35l40-15l40,15L50,30z M85,35v23.86c0,1.73-1.07,3.29-2.71,4.04c-1.65,0.75-2.16,2.91-1.13,4.4C82.23,68.93,83,70.87,83,73c0,5.52-4.48,10-10,10s-10-4.48-10-10c0-2.13,0.77-4.07,1.84-5.7c1.03-1.49,0.52-3.65-1.13-4.4C62.07,62.15,61,60.59,61,58.86V46.67L50,50.83L15,37.5v12.5c0,12.15,15.67,22,35,22s35-9.85,35-22V37.5L50,50.83L30,42.5v10c0,1.73,8.97,5,20,5s20-3.27,20-5v-10L50,30L25,40L50,50L85,35z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Education</p>
+                            </div>
+                            
+                            <!-- Retirement -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-chair' %}selected{% endif %}" data-icon="fa-chair">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-retirement">
+                                        <path d="M70,40V25c0-5.52-4.48-10-10-10H40c-5.52,0-10,4.48-10,10v15c-5.52,0-10,4.48-10,10v15h10v10h5v10h30V75h5V65h10V50C80,44.48,75.52,40,70,40z M35,25c0-2.76,2.24-5,5-5h20c2.76,0,5,2.24,5,5v15H35V25z M65,80H35v-5h30V80z M75,60H25v-5h50V60z M75,50H25c0-2.76,2.24-5,5-5h40C72.76,45,75,47.24,75,50z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Retirement</p>
+                            </div>
+                            
+                            <!-- Debt Payoff -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-money-bill' %}selected{% endif %}" data-icon="fa-money-bill">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-debt">
+                                        <path d="M90,25H10c-2.76,0-5,2.24-5,5v40c0,2.76,2.24,5,5,5h80c2.76,0,5-2.24,5-5V30C95,27.24,92.76,25,90,25z M85,65H15V35h70V65z M35,50c0-2.76,2.24-5,5-5s5,2.24,5,5s-2.24,5-5,5S35,52.76,35,50z M55,50c0-2.76,2.24-5,5-5s5,2.24,5,5s-2.24,5-5,5S55,52.76,55,50z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Debt Payoff</p>
+                            </div>
+                            
+                            <!-- Other -->
+                            <div class="goal-type-card {% if goal.icon == 'fa-star' %}selected{% endif %}" data-icon="fa-star">
+                                <div class="goal-icon">
+                                    <svg viewBox="0 0 100 100" class="svg-other">
+                                        <path d="M50,15l10.87,22.05L85,40.14l-17.5,17.05L71.74,85L50,72.5L28.26,85l4.24-27.81L15,40.14l24.13-3.09L50,15z"></path>
+                                    </svg>
+                                </div>
+                                <p class="goal-icon-name">Other</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card slide-up" style="animation-delay: 0.2s;">
+                <div class="card-header">
+                    <h5 class="mb-0">Financial Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="target_amount" class="form-label">Target Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="target_amount" name="target_amount" 
+                                       value="{{ goal.target_amount }}" step="0.01" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="target_date" class="form-label">Target Date</label>
+                            <input type="date" class="form-control" id="target_date" name="target_date" 
+                                   value="{{ goal.target_date|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="monthly_contribution" class="form-label">Recommended Monthly Contribution</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="monthly_contribution" name="monthly_contribution" 
+                                   value="{{ goal.monthly_contribution }}" step="0.01" readonly>
+                            <button class="btn btn-outline-secondary" type="button" id="recalculate_btn">
+                                <i class="fa-solid fa-calculator"></i> Recalculate
+                            </button>
+                        </div>
+                        <div class="form-text">Based on your target amount and date</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="personal" {% if goal.category == 'personal' %}selected{% endif %}>Personal</option>
+                            <option value="family" {% if goal.category == 'family' %}selected{% endif %}>Family</option>
+                            <option value="business" {% if goal.category == 'business' %}selected{% endif %}>Business</option>
+                            <option value="education" {% if goal.category == 'education' %}selected{% endif %}>Education</option>
+                            <option value="retirement" {% if goal.category == 'retirement' %}selected{% endif %}>Retirement</option>
+                            <option value="travel" {% if goal.category == 'travel' %}selected{% endif %}>Travel</option>
+                            <option value="other" {% if goal.category == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card slide-up" style="animation-delay: 0.3s;">
+                <div class="card-header">
+                    <h5 class="mb-0">Additional Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ goal.description }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes (Private)</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2">{{ goal.notes }}</textarea>
+                        <div class="form-text">Use this space for your personal thoughts about this goal</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="goal_image" class="form-label">Goal Image (Optional)</label>
+                        {% if goal.image %}
+                        <div class="mb-2">
+                            <img src="{{ goal.image.url }}" alt="Goal image" class="img-thumbnail image-preview">
+                        </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="goal_image" name="image" accept="image/*">
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="visibility" name="is_public" 
+                               {% if goal.is_public %}checked{% endif %}>
+                        <label class="form-check-label" for="visibility">Make this goal public</label>
+                        <div class="form-text">Public goals may appear in shared dashboards</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="reminder_frequency" class="form-label">Reminder Frequency</label>
+                        <select class="form-select" id="reminder_frequency" name="reminder_frequency">
+                            <option value="none" {% if goal.reminder_frequency == 'none' %}selected{% endif %}>No reminders</option>
+                            <option value="weekly" {% if goal.reminder_frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+                            <option value="biweekly" {% if goal.reminder_frequency == 'biweekly' %}selected{% endif %}>Bi-weekly</option>
+                            <option value="monthly" {% if goal.reminder_frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestones Section -->
+            <div class="card slide-up" style="animation-delay: 0.4s;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Milestones</h5>
+                    <button type="button" class="btn btn-sm btn-primary" id="add_milestone_btn">
+                        <i class="fa-solid fa-plus"></i> Add Milestone
+                    </button>
+                </div>
+                <div class="card-body" id="milestones_container">
+                    {% if goal.milestones.all %}
+                        {% for milestone in goal.milestones.all %}
+                        <div class="milestone-item">
+                            <div class="row">
+                                <div class="col-md-4 mb-2 mb-md-0">
+                                    <input type="text" class="form-control" name="milestone_name_{{ milestone.id }}" 
+                                           value="{{ milestone.name }}" placeholder="Milestone name">
+                                </div>
+                                <div class="col-md-3 mb-2 mb-md-0">
+                                    <input type="number" class="form-control" name="milestone_amount_{{ milestone.id }}" 
+                                           value="{{ milestone.amount }}" step="0.01" placeholder="Amount">
+                                </div>
+                                <div class="col-md-3 mb-2 mb-md-0">
+                                    <input type="date" class="form-control" name="milestone_date_{{ milestone.id }}" 
+                                           value="{{ milestone.target_date|date:'Y-m-d' }}">
+                                </div>
+                                <div class="col-md-1 d-flex align-items-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-milestone" 
+                                            data-milestone-id="{{ milestone.id }}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p id="no_milestones_msg">No milestones yet. Add your first milestone!</p>
+                    {% endif %}
+                    <div id="new_milestones_container"></div>
+                    <input type="hidden" name="milestone_count" id="milestone_count" value="0">
+                    <input type="hidden" name="deleted_milestones" id="deleted_milestones" value="">
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4 slide-up" style="animation-delay: 0.5s;">
+                <div>
+                    <a href="{% url 'goal_detail' goal.id %}" class="btn btn-outline-secondary me-2">
+                        <i class="fa-solid fa-arrow-left"></i> Cancel
+                    </a>
+                    <button type="button" class="btn btn-outline-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteGoalModal">
+                        <i class="fa-solid fa-trash"></i> Delete Goal
+                    </button>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+        
+        <!-- Delete Goal Modal -->
+        <div class="modal fade" id="deleteGoalModal" tabindex="-1" aria-labelledby="deleteGoalModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteGoalModalLabel">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete "{{ goal.name }}"? This action cannot be undone.</p>
+                        <p>All progress, milestones, and contributions will be permanently removed.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'delete_goal' goal.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete Goal</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Icon selector functionality
+        document.querySelectorAll('.goal-type-card').forEach(option => {
+            option.addEventListener('click', function() {
+                // Add animation effect on selection
+                this.classList.add('animate__animated', 'animate__pulse');
+                setTimeout(() => {
+                    this.classList.remove('animate__animated', 'animate__pulse');
+                }, 500);
+                
+                // Remove selected class from all options
+                document.querySelectorAll('.goal-type-card').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // Update hidden input value
+                document.getElementById('selected_icon').value = this.getAttribute('data-icon');
+            });
+        });
+        
+       // Monthly contribution calculator
+function calculateMonthlyContribution() {
+    const targetAmount = parseFloat(document.getElementById('target_amount').value) || 0;
+    const currentAmount = parseFloat({{ goal.current_amount|default:0 }});
+    const targetDate = new Date(document.getElementById('target_date').value);
+    const today = new Date();
+    
+    // Calculate months between today and target date
+    const monthsRemaining = (targetDate.getFullYear() - today.getFullYear()) * 12 + 
+                           (targetDate.getMonth() - today.getMonth());
+    
+    let monthlyContribution = 0;
+    if (monthsRemaining > 0) {
+        monthlyContribution = (targetAmount - currentAmount) / monthsRemaining;
+    }
+    
+    // Update the monthly contribution field
+    document.getElementById('monthly_contribution').value = monthlyContribution.toFixed(2);
+}
+
+// Recalculation button
+document.getElementById('recalculate_btn').addEventListener('click', calculateMonthlyContribution);
+
+// Run calculation on page load and when target amount or date changes
+document.addEventListener('DOMContentLoaded', function() {
+    calculateMonthlyContribution();
+    document.getElementById('target_amount').addEventListener('change', calculateMonthlyContribution);
+    document.getElementById('target_date').addEventListener('change', calculateMonthlyContribution);
+});
+
+// Milestone management
+let milestoneCounter = 0;
+const deletedMilestones = [];
+
+function addMilestone() {
+    // Hide "no milestones" message if visible
+    const noMilestonesMsg = document.getElementById('no_milestones_msg');
+    if (noMilestonesMsg) {
+        noMilestonesMsg.style.display = 'none';
+    }
+    
+    const milestoneContainer = document.getElementById('new_milestones_container');
+    milestoneCounter++;
+    
+    const milestoneItem = document.createElement('div');
+    milestoneItem.className = 'milestone-item animate__animated animate__fadeIn';
+    milestoneItem.innerHTML = `
+        <div class="row">
+            <div class="col-md-5 mb-2 mb-md-0">
+                <input type="text" class="form-control" name="new_milestone_name_${milestoneCounter}" 
+                       placeholder="Milestone name" required>
+            </div>
+            <div class="col-md-3 mb-2 mb-md-0">
+                <input type="number" class="form-control" name="new_milestone_amount_${milestoneCounter}" 
+                       step="0.01" placeholder="Amount" required>
+            </div>
+            <div class="col-md-3 mb-2 mb-md-0">
+                <input type="date" class="form-control" name="new_milestone_date_${milestoneCounter}">
+            </div>
+            <div class="col-md-1 d-flex align-items-center">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-new-milestone">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    milestoneContainer.appendChild(milestoneItem);
+    
+    // Update milestone count
+    document.getElementById('milestone_count').value = milestoneCounter;
+    
+    // Add event listener to remove button
+    milestoneItem.querySelector('.remove-new-milestone').addEventListener('click', function() {
+        milestoneItem.classList.add('animate__animated', 'animate__fadeOut');
+        setTimeout(() => {
+            milestoneContainer.removeChild(milestoneItem);
+            // Show "no milestones" message if no milestones left
+            checkNoMilestones();
+        }, 500);
+    });
+}
+
+// Check if there are no milestones to show message
+function checkNoMilestones() {
+    const existingMilestones = document.querySelectorAll('.milestone-item').length;
+    const noMilestonesMsg = document.getElementById('no_milestones_msg');
+    
+    if (existingMilestones === 0 && noMilestonesMsg) {
+        noMilestonesMsg.style.display = 'block';
+    }
+}
+
+// Add milestone button handler
+document.getElementById('add_milestone_btn').addEventListener('click', addMilestone);
+
+// Remove existing milestone
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-milestone') || 
+        e.target.parentElement.classList.contains('remove-milestone')) {
+        
+        const button = e.target.classList.contains('remove-milestone') ? 
+                      e.target : e.target.parentElement;
+        const milestoneId = button.getAttribute('data-milestone-id');
+        const milestoneItem = button.closest('.milestone-item');
+        
+        milestoneItem.classList.add('animate__animated', 'animate__fadeOut');
+        setTimeout(() => {
+            milestoneItem.remove();
+            
+            // Add to deleted milestones
+            deletedMilestones.push(milestoneId);
+            document.getElementById('deleted_milestones').value = deletedMilestones.join(',');
+            
+            // Check if we need to show "no milestones" message
+            checkNoMilestones();
+        }, 500);
+    }
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    // Check if target date is in the future
+    const targetDate = new Date(document.getElementById('target_date').value);
+    const today = new Date();
+    
+    if (targetDate <= today) {
+        alert('Target date must be in the future.');
+        e.preventDefault();
+        return false;
+    }
+    
+    // Check if target amount is greater than zero
+    const targetAmount = parseFloat(document.getElementById('target_amount').value) || 0;
+    if (targetAmount <= 0) {
+        alert('Target amount must be greater than zero.');
+        e.preventDefault();
+        return false;
+    }
+    
+    return true;
+});
+    </script>
+</body>
+</html>

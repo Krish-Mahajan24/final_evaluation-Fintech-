@@ -1,0 +1,559 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinTrack - Smart Portfolio Management{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3366ff;
+            --primary-dark: #1a4cd9;
+            --secondary: #27cad6;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #1e1e1e;
+            --lighter: #2c2c2c;
+            --success: #05c46b;
+            --warning: #ffa801;
+            --danger: #ff5e57;
+            --gray: #2a2a2a;
+            --text: #e6e6e6;
+            --text-light: #a0a0a0;
+            --border-color: #3a3a3a;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--dark);
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        
+        .text-secondary {
+            color: var(--secondary) !important;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        /* Dashboard image styling */
+        .dashboard-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-image-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(46, 91, 255, 0.2) 0%, rgba(39, 202, 214, 0.2) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-image {
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .dashboard-image-container:hover .hero-image {
+            transform: scale(1.02);
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 100px 0;
+            overflow: hidden;
+            background-color: var(--light);
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(46, 91, 255, 0.15) 0%, rgba(39, 202, 214, 0.15) 100%);
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: -300px;
+            left: -300px;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(39, 202, 214, 0.15) 0%, rgba(46, 91, 255, 0.15) 100%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-image {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0px 20px 30px rgba(0, 0, 0, 0.25));
+        }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background-color: var(--dark);
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background-color: var(--light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+        
+        .feature-icon.bg-1 {
+            background: linear-gradient(135deg, #5374fa 0%, #7c94ff 100%);
+        }
+        
+        .feature-icon.bg-2 {
+            background: linear-gradient(135deg, #27cad6 0%, #5ce0ea 100%);
+        }
+        
+        .feature-icon.bg-3 {
+            background: linear-gradient(135deg, #05c46b 0%, #5eeaa5 100%);
+        }
+        
+        .feature-icon.bg-4 {
+            background: linear-gradient(135deg, #ffa801 0%, #ffcd5e 100%);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background-color: var(--light);
+            padding: 100px 0;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 0;
+            background-color: var(--dark);
+        }
+        
+        .testimonial-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background-color: var(--light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .testimonial-card .quote {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 1rem;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+      
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+        }
+        
+        .cta h2 {
+            color: #fff;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--darker);
+            color: #fff;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-links h5 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+        
+        /* Navbar */
+        .navbar {
+            padding: 20px 0;
+            background-color: var(--darker);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .navbar-nav .nav-link.btn {
+            padding: 0.5rem 1.5rem;
+            margin-left: 1rem;
+            color: #fff;
+        }
+        
+        .navbar-toggler {
+            border-color: var(--border-color);
+            color: var(--text);
+        }
+        
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+        
+        /* Form elements */
+        input, textarea, select {
+            background-color: var(--lighter) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text) !important;
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: var(--text-light) !important;
+        }
+        
+        /* Card styles */
+        .card {
+            background-color: var(--light);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-header, .card-footer {
+            background-color: var(--lighter);
+            border-color: var(--border-color);
+        }
+        
+        /* Table styles */
+        .table {
+            color: var(--text);
+        }
+        
+        .table thead th {
+            border-color: var(--border-color);
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .table td, .table th {
+            border-color: var(--border-color);
+        }
+        
+        /* Modal styles */
+        .modal-content {
+            background-color: var(--light);
+            border-color: var(--border-color);
+        }
+        
+        .modal-header, .modal-footer {
+            border-color: var(--border-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .hero {
+                text-align: center;
+                padding: 80px 0;
+            }
+            
+            .hero-image {
+                margin-top: 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .features, .how-it-works, .testimonials, .cta {
+                padding: 60px 0;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body><!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>FinTrack
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'goal_list' %}">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary" href="{% url 'signup' %}">Sign In</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <a href="#" class="text-decoration-none">
+                        <h3 class="text-white"><i class="fas fa-chart-line me-2"></i>FinTrack</h3>
+                    </a>
+                    <p class="my-4">The most powerful and user-friendly portfolio tracker for modern investors.</p>
+                    <div class="d-flex">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6 col-md-4 col-lg-2 mt-4 mt-lg-0 footer-links">
+                    <h5>Product</h5>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-sm-6 col-md-4 col-lg-2 mt-4 mt-lg-0 footer-links">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-sm-6 col-md-4 col-lg-2 mt-4 mt-lg-0 footer-links">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-sm-6 col-lg-2 mt-4 mt-lg-0 footer-links">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="mt-5 mb-4 border-secondary">
+            
+            <div class="row">
+                <div class="col-md-6 text-right text-md-start">
+                    <p class="small text-muted">© 2025 FinTrack. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
+
+

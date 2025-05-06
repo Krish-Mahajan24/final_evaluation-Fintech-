@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intuit Search Results</title>
+    <style>
+        
+        body {
+            font-family: 'Open Sans', sans-serif; 
+            margin: 0;
+            color: #333;
+            line-height: 1.6; 
+        }
+
+        a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+
+        
+        header {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center; 
+            justify-content: space-between;
+        }
+
+        header h1 {
+            color: green;
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav li {
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        
+        .search-container {
+            max-width: 500px;
+            margin: 30px auto;
+            display: flex;
+        }
+
+        .search-container input {
+            flex-grow: 1; 
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            box-sizing: border-box; 
+            font-size: 1em;
+        }
+
+        .search-container button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        
+        .results-count {
+            padding: 0 30px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .results {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .results a {
+            display: block;
+            font-size: 1.1em;
+            color: green;
+            margin-bottom: 5px;
+            font-weight: 600; 
+        }
+
+        .results p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        
+        .pagination {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .pagination span {
+            display: inline-block;
+            padding: 6px 10px;
+            margin: 0 5px;  
+            border: 1px solid green;
+            border-radius: 4px;
+            color: green;
+            cursor: pointer;
+        }
+
+        .pagination .active {
+            background-color: green;
+            color: white;
+        }
+
+        
+        footer {
+            background-color:black;
+            padding: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .footer-text {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links, .additional-footer {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 20px;
+        }
+
+        .footer-links div, .additional-footer div {
+            text-align: left;
+            color: white; 
+        }
+
+        .footer-links h3 {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .footer-links p, .additional-footer p {
+            margin: 5px 0;
+            color: white;
+        }
+
+        .extra-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 900px;
+            margin: 20px auto; 
+        }
+        .extra-links p {
+            margin: 0 10px;
+            color: white;
+        }
+
+        
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+        .social-icons span {
+            font-size: 1.5em;
+            color: white; 
+        }
+
+        .legal-section {
+            margin-top: 30px;
+            color: white;
+        }
+        .legal-section p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <header>
+        <h1>MINT</h1>
+        <nav>
+            <ul>
+                <li>Products</li>
+                <li>Solutions</li>
+                <li>Support and Blogs</li>
+                <li>Company</li>
+                <li>Sign In</li>
+            </ul>
+        </nav>
+    </header>
+
+    
+    <main>
+        <div class="search-container">
+            <input type="text" placeholder="feedback">
+            <button></button>
+        </div>
+
+        <div class="results">
+            <a href="#">Product User Research Feedback Sessions | Intuit</a>
+            <p>About IntuitJoin Our TeamPress RoomAccessibilityTerms and Conditions...</p>
+
+            <a href="#">Ontario Accessible Customer Service Policy | Intuit</a>
+            <p>Intuit Canada ULC is committed to ensuring that we provide services to our customers...</p>
+
+            <a href="#">Getting the most from a mentoring relationship - Intuit</a>
+            <p>Working with a mentor can be a powerful way to build your skills...</p>
+
+            <a href="#">"There’s So Much to Learn" - A Look Inside Intuit</a>
+            <p>Internships provide hands-on experience and exposure to the working world...</p>
+
+            <a href="#">15 product manager interview questions to expect</a>
+            <p>Product managers oversee the development and lifecycle of products...</p>
+
+            <a href="#">Tech Talk: Why Does it Matter? SmartSort with Grace Wu</a>
+            <p>Through Intuit’s innovative technology, we are able to provide the best possible products...</p>
+        </div>
+    </main>
+
+   
+    <footer>
+        <div class="footer-text">
+            <p>Intuit is proud to be an equal opportunity and affirmative action employer. We make employment decisions without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, age, veteran status, disability status, pregnancy, or any other basis protected by federal, state, or local law.</p>
+            <p>For more information, please read our <a href="#">EEO policy</a>. Intuit encourages people with criminal record histories to apply for employment...</p>
+        </div>
+
+        <div class="footer-links">
+            <div>
+                <h3>Our Company</h3>
+                <p>Mission</p>
+                <p>Leaders</p>
+            </div>
+            <div>
+                <h3>Teams</h3>
+                <p>Software Engineering</p>
+                <p>Data Science</p>
+            </div>
+            <div>
+                <h3>Programs</h3>
+                <p>Internships</p>
+                <p>Entry-Level Careers</p>
+            </div>
+            <div>
+                <h3>Locations</h3>
+                <p>United States</p>
+                <p>Australia</p>
+            </div>
+        </div>
+
+        <div class="additional-footer">
+            <div class="extra-links">
+                <p>Products</p>
+                <p>Accessibility</p>
+                <p>Blog</p>
+                <p>Hiring Process</p>
+                <p>Product Management</p>
+                <p>Tax & Accounting Experts</p>
+                <p>Tech Women @ Intuit</p>
+                <p>Intuit Career Pathways</p>
+                <p>Canada</p>
+                <p>India</p>
+                <p>Israel</p>
+                <p>United Kingdom</p>
+            </div>
+            </div>
+
+            <div class="social-icons">
+                <span>📘</span>
+                <span>𝕏</span>
+                <span>▶️</span>
+                <span>🔗</span>
+            </div>
+        </div>
+
+        <div class="legal-section">
+            <p>©️ 2025 Intuit Inc. All rights reserved.</p>
+            <p>Legal | Privacy | Security | Recruitment Fraud</p>
+        </div>
+    </footer>
+    </body>
+</html>

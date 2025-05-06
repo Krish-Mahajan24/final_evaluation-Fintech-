@@ -1,0 +1,422 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Goal | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6d83ff;
+            --primary-light: #2b3553;
+            --secondary-color: #5d57e3;
+            --success-color: #4cc9a4;
+            --danger-color: #ef476f;
+            --warning-color: #ffd166;
+            --info-color: #4cc9f0;
+            
+            --dark-bg: #121212;
+            --dark-card-bg: #1e1e1e;
+            --dark-text: #e0e0e0;
+            --dark-text-secondary: #adb5bd;
+            --dark-border: #333333;
+            --dark-input-bg: #2c2c2c;
+            --dark-hover: #2d2d2d;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+        }
+        
+        .form-container {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: var(--dark-card-bg);
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        
+        .goal-type-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .goal-type-card {
+            width: 130px;
+            border: 2px solid var(--dark-border);
+            border-radius: 12px;
+            padding: 18px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-color: var(--dark-card-bg);
+            color: var(--dark-text);
+        }
+        
+        .goal-type-card:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            transform: translateY(-5px);
+        }
+        
+        .goal-type-card.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            transform: scale(1.05);
+        }
+        
+        .goal-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .goal-type-card:hover .goal-icon {
+            transform: scale(1.15);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--dark-text);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            background-color: var(--dark-input-bg);
+            color: var(--dark-text);
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(109, 131, 255, 0.15);
+            border-color: var(--primary-color);
+            background-color: var(--dark-input-bg);
+            color: var(--dark-text);
+        }
+        
+        .btn {
+            border-radius: 10px;
+            padding: 10px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(93, 87, 227, 0.3);
+        }
+        
+        .btn-outline-secondary {
+            border-color: var(--dark-border);
+            color: var(--dark-text-secondary);
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-hover);
+            color: var(--dark-text);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        .breadcrumb-item {
+            color: var(--dark-text-secondary);
+        }
+        
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--dark-text-secondary);
+        }
+        
+        h1 {
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .lead {
+            color: var(--dark-text-secondary);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        /* Alert animations */
+        .alert {
+            border-radius: 10px;
+            animation: fadeIn 0.4s ease-out forwards;
+            background-color: var(--dark-card-bg);
+            border-color: var(--danger-color);
+            color: var(--dark-text);
+        }
+        
+        /* Custom colors for goal types */
+        .icon-vacation { color: #ffd166; }
+        .icon-emergency { color: #ef476f; }
+        .icon-house { color: #06d6a0; }
+        .icon-car { color: #118ab2; }
+        .icon-education { color: #073b4c; }
+        .icon-retirement { color: #7209b7; }
+        .icon-debt { color: #d90429; }
+        .icon-other { color: #6d83ff; }
+        
+        /* Dark mode overrides for Bootstrap components */
+        .alert-danger {
+            background-color: rgba(239, 71, 111, 0.2);
+            border-color: var(--danger-color);
+            color: var(--dark-text);
+        }
+        
+        /* Dark mode for placeholder text */
+        ::placeholder {
+            color: var(--dark-text-secondary);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="form-container">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Goals</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Goal</li>
+                        </ol>
+                    </nav>
+                    
+                    <h1 class="mb-3">Create New Financial Goal</h1>
+                    <p class="lead">Set a new savings goal and track your progress toward financial success.</p>
+                </div>
+            </div>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Please correct the errors below.
+                    </div>
+                {% endif %}
+                
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">Goal Type</h5>
+                        
+                        <div class="goal-type-selector">
+                            <div class="goal-type-card" data-value="VAC">
+                                <i class="fas fa-umbrella-beach goal-icon icon-vacation"></i>
+                                <div>Vacation</div>
+                            </div>
+                            <div class="goal-type-card" data-value="EMF">
+                                <i class="fas fa-shield-alt goal-icon icon-emergency"></i>
+                                <div>Emergency Fund</div>
+                            </div>
+                            <div class="goal-type-card" data-value="HDP">
+                                <i class="fas fa-home goal-icon icon-house"></i>
+                                <div>House Down Payment</div>
+                            </div>
+                            <div class="goal-type-card" data-value="CAR">
+                                <i class="fas fa-car goal-icon icon-car"></i>
+                                <div>Vehicle</div>
+                            </div>
+                            <div class="goal-type-card" data-value="EDU">
+                                <i class="fas fa-graduation-cap goal-icon icon-education"></i>
+                                <div>Education</div>
+                            </div>
+                            <div class="goal-type-card" data-value="RET">
+                                <i class="fas fa-chair goal-icon icon-retirement"></i>
+                                <div>Retirement</div>
+                            </div>
+                            <div class="goal-type-card" data-value="DEB">
+                                <i class="fas fa-money-bill-wave goal-icon icon-debt"></i>
+                                <div>Debt Payoff</div>
+                            </div>
+                            <div class="goal-type-card" data-value="OTH">
+                                <i class="fas fa-star goal-icon icon-other"></i>
+                                <div>Other</div>
+                            </div>
+                        </div>
+                        
+                        {{ form.goal_type.errors }}
+                        {{ form.goal_type }}
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">Goal Details</h5>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Goal Name</label>
+                            {{ form.name.errors }}
+                            <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" 
+                                   class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.name.value|default:'' }}" placeholder="e.g., Dream Vacation to Hawaii">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="{{ form.target_amount.id_for_label }}" class="form-label">Target Amount ($)</label>
+                                    {{ form.target_amount.errors }}
+                                    <input type="number" name="{{ form.target_amount.name }}" id="{{ form.target_amount.id_for_label }}" 
+                                           class="form-control {% if form.target_amount.errors %}is-invalid{% endif %}" 
+                                           value="{{ form.target_amount.value|default:'' }}" placeholder="5000">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="{{ form.target_date.id_for_label }}" class="form-label">Target Date</label>
+                                    {{ form.target_date.errors }}
+                                    <input type="date" name="{{ form.target_date.name }}" id="{{ form.target_date.id_for_label }}" 
+                                           class="form-control {% if form.target_date.errors %}is-invalid{% endif %}" 
+                                           value="{{ form.target_date.value|date:'Y-m-d'|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">Description (Optional)</label>
+                            {{ form.description.errors }}
+                            <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" 
+                                      class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                                      rows="3" placeholder="Describe your goal and why it's important to you">{{ form.description.value|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                    <a href="{% url 'goal_list' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const goalTypeCards = document.querySelectorAll('.goal-type-card');
+            const goalTypeInput = document.getElementById('id_goal_type');
+            
+            // Hide the original select field
+            goalTypeInput.style.display = 'none';
+            
+            // Set initial selection if form has been submitted with errors
+            if (goalTypeInput.value) {
+                const selectedCard = document.querySelector(`.goal-type-card[data-value="${goalTypeInput.value}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+            }
+            
+            // Add click handlers to goal type cards
+            goalTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selection from all cards
+                    goalTypeCards.forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked card
+                    this.classList.add('selected');
+                    
+                    // Update the hidden input value
+                    goalTypeInput.value = this.dataset.value;
+                    
+                    // Add ripple effect
+                    const ripple = document.createElement('div');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    // Animation for selection
+                    const icon = this.querySelector('.goal-icon');
+                    icon.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+            
+            // Add animation to form inputs
+            const formInputs = document.querySelectorAll('.form-control');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transition = 'all 0.3s ease';
+                    this.parentElement.style.transform = 'translateY(-3px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Button hover effects
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

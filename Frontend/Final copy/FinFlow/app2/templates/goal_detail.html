@@ -1,0 +1,907 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ goal.name }} | Budget Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --primary-color: #7e96ec; /* Lighter blue */
+    --secondary-color: #a1a4b3; /* Lighter gray */
+    --success-color: #2edb9e; /* Brighter green */
+    --warning-color: #f8d06a; /* Brighter yellow */
+    --danger-color: #f07a70; /* Brighter red */
+    --light-color: #21242c; /* Very dark blue-gray */
+    --dark-color: #b8bac6; /* Light gray */
+    --box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.5);
+    --hover-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.6);
+    --border-radius: 15px;
+    --bg-color: #141820; /* Dark blue-gray */
+    --card-bg: #1e2330; /* Slightly lighter dark blue */
+    --text-color: #e0e0e0; /* Light gray text */
+    --text-muted: #a1a4b3; /* Muted text */
+    --border-color: rgba(255, 255, 255, 0.05);
+    --list-bg: #1a1f2a; /* Darker blue for list items */
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    transition: background-color 0.3s ease;
+    color: var(--text-color);
+}
+
+.container {
+    padding: 1.5rem;
+    max-width: 1200px;
+}
+
+/* Box container styling */
+.box-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: none;
+}
+
+.box-container:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.box-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+}
+
+.box-body {
+    padding: 1.5rem;
+}
+
+/* Apply box container styling to cards */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.card-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.btn {
+    border-radius: 10px;
+    padding: 0.375rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+}
+
+.btn-outline-secondary {
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.breadcrumb {
+    background: transparent;
+    padding: 0.75rem 0;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-muted);
+}
+
+.breadcrumb-item a:hover {
+    color: #9eabef;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.lead {
+    color: var(--text-muted);
+}
+
+/* Apply box container styling to stats cards */
+.stats-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--primary-color);
+}
+
+.stats-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.stats-card p {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.stats-card:nth-child(1)::before {
+    background: var(--primary-color);
+}
+
+.stats-card:nth-child(2)::before {
+    background: var(--success-color);
+}
+
+.stats-card:nth-child(3)::before {
+    background: var(--warning-color);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-success {
+    color: var(--success-color) !important;
+}
+
+.text-warning {
+    color: var(--warning-color) !important;
+}
+
+.text-danger {
+    color: var(--danger-color) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Progress container styling */
+.progress-container {
+    position: relative;
+    margin-top: 120px;
+    margin-bottom: 75px;
+}
+
+.progress {
+    height: 18px;
+    border-radius: 10px;
+    background-color: #303745;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 1.5s ease-in-out;
+}
+
+.milestone-marker {
+    position: absolute;
+    bottom: 50px;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.milestone-marker.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.milestone-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    margin: 0 auto 8px;
+    border: 3px solid var(--card-bg);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.milestone-dot.achieved {
+    background-color: var(--success-color);
+}
+
+.milestone-marker:hover .milestone-dot {
+    transform: scale(1.3);
+}
+
+.milestone-label {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    background-color: rgba(30, 35, 48, 0.95);
+    padding: 5px 8px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    max-width: 120px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+.milestone-marker:hover .milestone-label {
+    transform: scale(1.1);
+    z-index: 10;
+    max-width: none;
+    white-space: normal;
+}
+
+/* Apply box container styling to list items */
+.list-group-item {
+    border: none;
+    border-radius: 10px !important;
+    margin-bottom: 0.5rem;
+    background-color: var(--list-bg);
+    padding: 1rem 1.25rem;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    color: var(--text-color);
+}
+
+.list-group-item:hover {
+    background-color: var(--card-bg);
+    transform: translateX(5px);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+}
+
+.list-group-item-action:hover {
+    background-color: var(--card-bg);
+}
+
+.badge {
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.badge:hover {
+    transform: scale(1.1);
+}
+
+/* Apply box container styling to alerts */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 1rem 1.25rem;
+    box-shadow: var(--box-shadow);
+    animation: fadeIn 0.5s ease;
+}
+
+.alert-success {
+    background-color: rgba(46, 219, 158, 0.15);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background-color: rgba(248, 208, 106, 0.15);
+    color: var(--warning-color);
+}
+
+.contribution-item {
+    transition: all 0.3s ease;
+}
+
+.contribution-item:hover {
+    transform: translateX(8px);
+    background-color: var(--card-bg);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-floating {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.btn-floating:hover {
+    transform: translateY(-5px) rotate(360deg);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.8s ease;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s ease;
+}
+
+.bounce-in {
+    animation: bounceIn 0.8s ease;
+}
+
+.progress-animate {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-animate::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.1) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.1) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 50px 50px;
+    animation: progressAnimation 2s linear infinite;
+    border-radius: 10px;
+}
+
+@keyframes progressAnimation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header, .box-header {
+        padding: 1rem;
+    }
+    
+    .card-body, .box-body {
+        padding: 1.25rem;
+    }
+    
+    .milestone-marker {
+        bottom: 40px;
+    }
+    
+    .milestone-dot {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .milestone-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Progress percentage and target date styling */
+.progress-percentage {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.target-date {
+    margin-bottom: 2.5rem;
+    color: var(--text-muted);
+}
+
+/* Collapsible panel styling */
+.collapse {
+    background-color: var(--card-bg);
+}
+
+/* Fix for Bootstrap's default styling */
+.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+/* Ensure modal content is dark too */
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Override any remaining bootstrap text colors */
+body, p, div, span, h1, h2, h3, h4, h5, h6, a:not(.btn) {
+    color: var(--text-color);
+}
+
+/* Ensure form controls are dark */
+.form-control {
+    background-color: var(--list-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--list-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(126, 150, 236, 0.25);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4 fade-in">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Goals</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ goal.name }}</li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>{{ goal.name }}</h1>
+                <div>
+                    <a href="{% url 'edit_goal' goal.id %}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit"></i> Edit Goal
+                    </a>
+                    <a href="{% url 'add_contribution' goal.id %}" class="btn btn-success ms-2">
+                        <i class="fas fa-plus"></i> Add Contribution
+                    </a>
+                </div>
+            </div>
+            <p class="lead">{{ goal.get_goal_type_display }}</p>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-md-4 bounce-in" style="animation-delay: 0.1s;">
+            <div class="stats-card">
+                <h3 class="text-primary">${{ goal.current_amount|floatformat:2 }}</h3>
+                <p class="mb-0">Current Amount</p>
+            </div>
+        </div>
+        <div class="col-md-4 bounce-in" style="animation-delay: 0.2s;">
+            <div class="stats-card">
+                <h3 class="text-success">${{ goal.target_amount|floatformat:2 }}</h3>
+                <p class="mb-0">Target Amount</p>
+            </div>
+        </div>
+        <div class="col-md-4 bounce-in" style="animation-delay: 0.3s;">
+            <div class="stats-card">
+                <h3 class="{% if days_remaining > 30 %}text-success{% elif days_remaining > 0 %}text-warning{% else %}text-danger{% endif %}">
+                    {{ days_remaining }} days
+                </h3>
+                <p class="mb-0">Days Remaining</p>
+            </div>
+        </div>
+    </div>
+    
+    {% if goal.is_completed %}
+        <div class="alert alert-success mb-4 bounce-in">
+            <i class="fas fa-trophy me-2"></i> Congratulations! You've successfully completed this goal!
+        </div>
+    {% else %}
+        <div class="row mb-4 fade-in">
+            <div class="col-md-12">
+                <div class="box-container">
+                    <div class="box-header">
+                        <h4 class="mb-0">Goal Progress</h4>
+                    </div>
+                    <div class="box-body">
+                        <!-- Enhanced styling for percentage and date with more space -->
+                        <div class="text-center mb-5">
+                            <h2 class="progress-percentage">{{ progress_percentage }}%</h2>
+                            <p class="target-date text-muted">Target Date: {{ goal.target_date|date:"F j, Y" }}</p>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress" style="height: 18px;">
+                                <div class="progress-bar progress-animate {% if is_on_track %}bg-success{% else %}bg-warning{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: 0%;" 
+                                     aria-valuenow="{{ progress_percentage }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                            
+                            {% for milestone in milestones %}
+                                {% if milestone.amount <= goal.target_amount %}
+                                    {% widthratio milestone.amount goal.target_amount 100 as position %}
+                                    <div class="milestone-marker" id="milestone-{{ forloop.counter }}" style="left: {{ position }}%;">
+                                        <div class="milestone-dot {% if milestone.is_achieved %}achieved{% endif %}"></div>
+                                        <div class="milestone-label">
+                                            {{ milestone.name }}
+                                            <div class="text-muted">${{ milestone.amount|floatformat:0 }}</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mt-4">
+                            {% if is_on_track %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i> You're on track to meet your goal!
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i> 
+                                    You're falling behind. To reach your goal by {{ goal.target_date|date:"F j, Y" }}, 
+                                    you should contribute <strong>${{ required_monthly|floatformat:2 }} per month</strong>.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-6 slide-in-left">
+            <div class="box-container">
+                <div class="box-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Milestones</h5>
+                    <a href="{% url 'add_milestone' goal.id %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-plus"></i> Add Milestone
+                    </a>
+                </div>
+                <div class="box-body">
+                    {% if milestones %}
+                        <div class="list-group">
+                            {% for milestone in milestones %}
+                                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" style="animation-delay: {{ forloop.counter|floatformat:0|add:"-1" }}00ms">
+                                    <div>
+                                        <h6 class="mb-1">{{ milestone.name }}</h6>
+                                        <p class="mb-1 text-muted">${{ milestone.amount|floatformat:2 }}</p>
+                                        {% if milestone.date %}
+                                            <small>Target: {{ milestone.date|date:"M d, Y" }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% if milestone.is_achieved %}
+                                        <span class="badge bg-success rounded-pill">
+                                            <i class="fas fa-check"></i> Achieved
+                                            {% if milestone.achievement_date %}
+                                                on {{ milestone.achievement_date|date:"M d" }}
+                                            {% endif %}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary rounded-pill">Pending</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No milestones created yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 slide-in-right">
+            <div class="box-container">
+                <div class="box-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Contributions</h5>
+                    <a href="{% url 'add_contribution' goal.id %}" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Add Contribution
+                    </a>
+                </div>
+                <div class="box-body">
+                    {% if contributions %}
+                        <div class="list-group">
+                            {% for contribution in contributions|slice:":5" %}
+                                <div class="list-group-item list-group-item-action contribution-item" style="animation-delay: {{ forloop.counter|floatformat:0|add:"-1" }}00ms">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">${{ contribution.amount|floatformat:2 }}</h6>
+                                        <small>{{ contribution.date|date:"M d, Y" }}</small>
+                                    </div>
+                                    {% if contribution.note %}
+                                        <p class="mb-1">{{ contribution.note }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if contributions.count > 5 %}
+                            <div class="text-center mt-3">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#allContributions">
+                                    <i class="fas fa-chevron-down me-1"></i> View All Contributions
+                                </button>
+                            </div>
+                            
+                            <div class="collapse mt-3" id="allContributions">
+                                <div class="list-group">
+                                    {% for contribution in contributions|slice:"5:" %}
+                                        <div class="list-group-item list-group-item-action contribution-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">${{ contribution.amount|floatformat:2 }}</h6>
+                                                <small>{{ contribution.date|date:"M d, Y" }}</small>
+                                            </div>
+                                            {% if contribution.note %}
+                                                <p class="mb-1">{{ contribution.note }}</p>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">No contributions yet. Start adding contributions to reach your goal!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if goal.description %}
+        <div class="row mt-4 fade-in">
+            <div class="col-md-12">
+                <div class="box-container">
+                    <div class="box-header">
+                        <h5 class="mb-0">Goal Description</h5>
+                    </div>
+                    <div class="box-body">
+                        <p>{{ goal.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="row mt-4 mb-5 fade-in">
+        <div class="col-md-12 text-center">
+            <a href="{% url 'goal_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to All Goals
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate progress bar on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.width = progressBar.getAttribute('aria-valuenow') + '%';
+            }
+            
+            // Animate milestone markers
+            const milestones = document.querySelectorAll('.milestone-marker');
+            milestones.forEach((milestone, index) => {
+                setTimeout(() => {
+                    milestone.classList.add('visible');
+                }, 500 + (index * 200));
+            });
+        }, 300);
+        
+        // Add animation classes to list items
+        const listItems = document.querySelectorAll('.list-group-item');
+        listItems.forEach((item, index) => {
+            item.classList.add('fade-in');
+            item.style.animationDelay = (0.1 + (index * 0.05)) + 's';
+        });
+        
+        // Add scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.box-container, .card').forEach(element => {
+            observer.observe(element);
+        });
+    });
+    
+    // Add hover effect to stats cards
+    const statsCards = document.querySelectorAll('.stats-card');
+    statsCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px)';
+            this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Add hover effect to list items
+    const listItems = document.querySelectorAll('.list-group-item');
+    listItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px)';
+            this.style.backgroundColor = 'white';
+            this.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.08)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.backgroundColor = '';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Toggle animation
+        // Toggle animation for "View All Contributions" button
+        const viewAllBtn = document.querySelector('[data-bs-target="#allContributions"]');
+        if (viewAllBtn) {
+            viewAllBtn.addEventListener('click', function() {
+                const icon = this.querySelector('.fas');
+                if (icon.classList.contains('fa-chevron-down')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        }
+        
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

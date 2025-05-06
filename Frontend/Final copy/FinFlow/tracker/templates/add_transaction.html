@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Transaction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-8 offset-md-2">
+            <div class="card" style="background-color: #161b22; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                <div class="card-header" style="background-color: #21262d; color: #58a6ff;">
+                    <h3>Add New Transaction</h3>
+                </div>
+                <div class="card-body" style="color: #c9d1d9;">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.date.id_for_label }}">Date</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="invalid-feedback d-block">{{ form.date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.type.id_for_label }}">Transaction Type</label>
+                            {{ form.type }}
+                            {% if form.type.errors %}
+                                <div class="invalid-feedback d-block">{{ form.type.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.category.id_for_label }}">Category</label>
+                            <div class="d-flex">
+                                {{ form.category }}
+                              
+                            </div>
+                            {% if form.category.errors %}
+                                <div class="invalid-feedback d-block">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+              
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.amount.id_for_label }}">Amount</label>
+                            {{ form.amount }}
+                            {% if form.amount.errors %}
+                                <div class="invalid-feedback d-block">{{ form.amount.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn" id="saveTransactionBtn" style="background-color: #238636; color: white;">Save Transaction</button>
+                            <a href="{% url 'dashboard' %}" class="btn" style="background-color: #21262d; color: #c9d1d9; margin-left: 10px;">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Style all form elements
+    document.addEventListener('DOMContentLoaded', function() {
+        const formElements = document.querySelectorAll('input, select');
+        formElements.forEach(el => {
+            el.classList.add('form-control');
+            el.style.backgroundColor = '#0d1117';
+            el.style.color = '#c9d1d9';
+            el.style.border = '1px solid #30363d';
+        });
+        
+        // Get references to DOM elements
+        const transactionTypeSelect = document.getElementById('id_type');
+        const categorySelect = document.getElementById('id_category');
+        const showNewCategoryFormBtn = document.getElementById('showNewCategoryForm');
+        const newCategoryForm = document.getElementById('newCategoryForm');
+        const categoryTypeInput = document.getElementById('categoryType');
+        const saveCategoryBtn = document.getElementById('saveCategory');
+        const cancelCategoryBtn = document.getElementById('cancelCategory');
+        
+        // Initial categories load
+        if (transactionTypeSelect) {
+            updateCategories(transactionTypeSelect.value);
+            
+            // Add event listener for transaction type change
+            transactionTypeSelect.addEventListener('change', function() {
+                updateCategories(this.value);
+            });
+        }
+        
+        // Show the new category form when the + button is clicked
+        showNewCategoryFormBtn.addEventListener('click', function() {
+            newCategoryForm.style.display = 'block';
+            // Set the category type to match the currently selected transaction type
+            categoryTypeInput.value = transactionTypeSelect.value;
+        });
+        
+        // Hide the form when cancel is clicked
+        cancelCategoryBtn.addEventListener('click', function() {
+            newCategoryForm.style.display = 'none';
+        });
+        
+        // Handle saving a new category
+        saveCategoryBtn.addEventListener('click', function() {
+            const categoryName = document.getElementById('categoryName').value;
+            const categoryType = categoryTypeInput.value;
+            
+            if (!categoryName) {
+                alert('Please enter a category name');
+                return;
+            }
+            
+            // Make an AJAX request to save the new category
+            fetch('/api/categories/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    name: categoryName,
+                    transaction_type: categoryType
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create category');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Add the new category to the dropdown
+                const option = document.createElement('option');
+                option.value = data.id;
+                option.textContent = data.name;
+                categorySelect.appendChild(option);
+                
+                // Select the newly created category
+                categorySelect.value = data.id;
+                
+                // Hide the form
+                newCategoryForm.style.display = 'none';
+                
+                // Clear the input
+                document.getElementById('categoryName').value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to create category: ' + error.message);
+            });
+        });
+    });
+    
+    function updateCategories(transactionType) {
+        // Fetch categories filtered by transaction type
+        fetch(`/api/categories/?transaction_type=${transactionType}`)
+        .then(response => response.json())
+            .then(data => {
+                const categorySelect = document.getElementById('id_category');
+                categorySelect.innerHTML = '';
+                
+                // Add empty option
+                const emptyOption = document.createElement('option');
+                emptyOption.value = '';
+                emptyOption.textContent = '-- Select Category --';
+                categorySelect.appendChild(emptyOption);
+                
+                // Add categories from the API
+                data.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching categories:', error));
+    }
+    
+    // Helper function to get CSRF token from cookies
+    function getCsrfToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dismiss Recommendation | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .recommendation-summary {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="form-container">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'recommendations' %}">Recommendations</a></li>
+                            <li class="breadcrumb-item active">Dismiss Recommendation</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            
+            <h2 class="mb-4">Dismiss Recommendation</h2>
+            
+            <div class="recommendation-summary">
+                <h5>{{ recommendation.title }}</h5>
+                <p>{{ recommendation.description }}</p>
+            </div>
+            
+            <form method="post" action="{% url 'dismiss_recommendation_confirm' recommendation.id %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Reason for Dismissal (Optional)</label>
+                    <select class="form-select" id="reason" name="reason">
+                        <option value="">Select a reason</option>
+                        <option value="not_relevant">Not relevant to my situation</option>
+                        <option value="already_implemented">Already implemented this suggestion</option>
+                        <option value="will_do_later">Will implement later</option>
+                        <option value="disagree">Disagree with the recommendation</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="feedback" class="form-label">Additional Feedback (Optional)</label>
+                    <textarea class="form-control" id="feedback" name="feedback" rows="3" placeholder="Help us improve our recommendations..."></textarea>
+                </div>
+                
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="dont_show_similar" name="dont_show_similar">
+                    <label class="form-check-label" for="dont_show_similar">
+                        Don't show similar recommendations in the future
+                    </label>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'recommendations' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Confirm Dismissal</button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-4">
+                <p class="text-muted small">Your feedback helps us provide better recommendations in the future.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

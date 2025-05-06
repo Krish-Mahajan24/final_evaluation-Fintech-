@@ -1,0 +1,62 @@
+<!-- templates/accounts/signup.html -->
+{% extends 'base.html' %}
+
+{% block title %}FinTrack - Sign Up{% endblock %}
+
+{% block content %}
+<style>
+   
+    .auth-form input[type="text"],
+    .auth-form input[type="email"],
+    .auth-form input[type="password"] {
+        max-width: 400px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    
+    .auth-form .btn-signup {
+        padding: 0.375rem 0.75rem;  
+        font-size: 0.875rem;        
+        max-width: 200px;         
+        margin: 0 auto;             
+    }
+    
+</style>
+
+<h2 class="text-center mb-4">Create Account</h2>
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    {% for field in form %}
+        {% for error in field.errors %}
+            {{ field.label }}: {{ error }}<br>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        {{ error }}<br>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form method="post" class="auth-form">
+    {% csrf_token %}
+    <div class="mb-5">
+        {{ form.username }}
+    </div>
+    <div class="mb-5">
+        {{ form.email }}
+    </div>
+    <div class="mb-5">
+        {{ form.password1 }}
+    </div>
+    <div class="mb-5">
+        {{ form.password2 }}
+    </div>
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-signup">Sign Up</button>
+    </div>
+</form>
+<p class="text-center mt-3">
+    Already have an account? <a href="{% url 'login' %}" class="auth-link">Sign In</a>
+</p>
+{% endblock %}

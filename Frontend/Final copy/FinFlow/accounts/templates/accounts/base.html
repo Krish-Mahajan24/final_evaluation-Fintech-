@@ -1,0 +1,64 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinTrack{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .auth-container {
+            max-width: 450px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(65, 84, 255, 0.3);
+        }
+        .auth-logo {
+            color: #7b68ee;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-form {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #7b68ee;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #6a5acd;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #555;
+            color: white;
+        }
+        .form-control::placeholder {
+            color: #aaa;
+        }
+        .auth-link {
+            color: #7b68ee;
+            text-decoration: none;
+        }
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Milestone | {{ goal.name }} | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #4cc9f0;
+            --secondary-color: #7b5dd5;
+            --success-color: #4cc9f0;
+            --dark-bg: #121212;
+            --dark-card-bg: #1e1e1e;
+            --dark-input-bg: #2d2d2d;
+            --dark-text: #e0e0e0;
+            --dark-text-secondary: #b0b0b0;
+            --dark-border: #3a3a3a;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+        }
+
+        .form-container {
+            max-width: 650px;
+            margin: 2rem auto;
+        }
+
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            overflow: hidden;
+            background-color: var(--dark-card-bg);
+            color: var(--dark-text);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+        }
+
+        .breadcrumb-item {
+            color: var(--dark-text-secondary);
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--secondary-color);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--dark-text-secondary);
+        }
+
+        .text-muted {
+            color: var(--dark-text-secondary) !important;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid var(--dark-border);
+            transition: all var(--transition-speed);
+            background-color: var(--dark-input-bg);
+            color: var(--dark-text);
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.25);
+            border-color: var(--primary-color);
+            background-color: var(--dark-input-bg);
+            color: var(--dark-text);
+        }
+
+        .form-control::placeholder {
+            color: var(--dark-text-secondary);
+            opacity: 0.7;
+        }
+
+        .input-group-text {
+            background-color: var(--dark-input-bg);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(76, 201, 240, 0.3);
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-text);
+            border-color: var(--dark-text-secondary);
+        }
+
+        .btn-outline-secondary:hover {
+            transform: translateY(-2px);
+            background-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #2d2d2d;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            transition: width 1s ease-in-out;
+        }
+
+        h1, h5 {
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .card-title {
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .card-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 50px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .goal-icon {
+            padding: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--dark-text-secondary);
+        }
+        
+        .goal-card-header {
+            background-color: rgba(76, 201, 240, 0.05);
+            border-bottom: none;
+            padding: 1.25rem;
+        }
+        
+        .card-header {
+            background-color: rgba(30, 30, 30, 0.7);
+            border-bottom: 1px solid var(--dark-border);
+        }
+        
+        .card-body {
+            background-color: var(--dark-card-bg);
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Goal type specific colors - Modified for dark mode */
+        .icon-vac { background-color: rgba(255, 193, 7, 0.2); color: #ffd54f; }
+        .icon-emf { background-color: rgba(220, 53, 69, 0.2); color: #ff6b6b; }
+        .icon-hdp { background-color: rgba(40, 167, 69, 0.2); color: #4ade80; }
+        .icon-car { background-color: rgba(13, 110, 253, 0.2); color: #60a5fa; }
+        .icon-edu { background-color: rgba(13, 202, 240, 0.2); color: #22d3ee; }
+        .icon-ret { background-color: rgba(108, 117, 125, 0.2); color: #9ca3af; }
+        .icon-deb { background-color: rgba(220, 53, 69, 0.2); color: #ff6b6b; }
+        .icon-other { background-color: rgba(13, 110, 253, 0.2); color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 fade-in">
+        <div class="form-container">
+            <div class="row mb-4 slide-up" style="animation-delay: 0.1s;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Goals</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'goal_detail' goal.id %}">{{ goal.name }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Add Milestone</li>
+                        </ol>
+                    </nav>
+                    
+                    <h1 class="mb-3">Add Milestone</h1>
+                    <p class="lead">Create a milestone for "{{ goal.name }}" to track key achievements along the way.</p>
+                </div>
+            </div>
+            
+            <div class="card mb-4 slide-up" style="animation-delay: 0.2s;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        {% if goal.goal_type == 'VAC' %}
+                            <div class="goal-icon icon-vac me-3">
+                                <i class="fas fa-umbrella-beach fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'EMF' %}
+                            <div class="goal-icon icon-emf me-3">
+                                <i class="fas fa-shield-alt fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'HDP' %}
+                            <div class="goal-icon icon-hdp me-3">
+                                <i class="fas fa-home fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'CAR' %}
+                            <div class="goal-icon icon-car me-3">
+                                <i class="fas fa-car fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'EDU' %}
+                            <div class="goal-icon icon-edu me-3">
+                                <i class="fas fa-graduation-cap fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'RET' %}
+                            <div class="goal-icon icon-ret me-3">
+                                <i class="fas fa-chair fa-2x"></i>
+                            </div>
+                        {% elif goal.goal_type == 'DEB' %}
+                            <div class="goal-icon icon-deb me-3">
+                                <i class="fas fa-money-bill-wave fa-2x"></i>
+                            </div>
+                        {% else %}
+                            <div class="goal-icon icon-other me-3">
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-0">{{ goal.name }}</h5>
+                            <p class="text-muted mb-0">Target: ${{ goal.target_amount|floatformat:2 }} by {{ goal.target_date|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" 
+                            aria-valuenow="{{ goal.get_progress_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                            <span class="visually-hidden">{{ goal.get_progress_percentage }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger slide-up" style="animation-delay: 0.3s;">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Please correct the errors below.
+                    </div>
+                {% endif %}
+                
+                <div class="card mb-4 slide-up" style="animation-delay: 0.4s;">
+                    <div class="card-header goal-card-header">
+                        <h5 class="card-title mb-0">Milestone Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="fas fa-bookmark me-2 text-primary"></i>
+                                Milestone Name
+                            </label>
+                            {{ form.name.errors }}
+                            <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" 
+                                   class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.name.value|default:'' }}" 
+                                   placeholder="e.g., Book Flight, First $1000">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.amount.id_for_label }}" class="form-label">
+                                <i class="fas fa-dollar-sign me-2 text-success"></i>
+                                Amount Required
+                            </label>
+                            {{ form.amount.errors }}
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="{{ form.amount.name }}" id="{{ form.amount.id_for_label }}" 
+                                       class="form-control {% if form.amount.errors %}is-invalid{% endif %}" 
+                                       value="{{ form.amount.value|default:'' }}" 
+                                       placeholder="Enter amount">
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Amount must be between $0 and ${{ goal.target_amount|floatformat:2 }}.
+                                When you reach this amount, the milestone will be marked as achieved.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.date.id_for_label }}" class="form-label">
+                                <i class="fas fa-calendar-alt me-2 text-info"></i>
+                                Target Date (Optional)
+                            </label>
+                            {{ form.date.errors }}
+                            <input type="date" name="{{ form.date.name }}" id="{{ form.date.id_for_label }}" 
+                                   class="form-control {% if form.date.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.date.value|date:'Y-m-d'|default:'' }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5 slide-up" style="animation-delay: 0.5s;">
+                    <a href="{% url 'goal_detail' goal.id %}" class="btn btn-outline-secondary me-md-2">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Add Milestone
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animate progress bar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const progressBar = document.querySelector('.progress-bar');
+                progressBar.style.width = '{{ goal.get_progress_percentage }}%';
+                progressBar.textContent = '{{ goal.get_progress_percentage }}%';
+            }, 300);
+            
+            // Add input focus animations
+            const formInputs = document.querySelectorAll('.form-control');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('pulse');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('pulse');
+                });
+            });
+            
+            // Button hover animation
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.classList.add('shadow-sm');
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.classList.remove('shadow-sm');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

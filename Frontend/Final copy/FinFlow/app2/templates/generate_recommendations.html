@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations | Budget Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .recommendation-card {
+            border-left: 4px solid #0d6efd;
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .recommendation-type {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .recommendation-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0d6efd;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'goal_list' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Generate Recommendations</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2>Financial Recommendations</h2>
+                <p class="text-muted">Our system will analyze your goals, contributions, and financial habits to provide personalized recommendations.</p>
+            </div>
+        </div>
+        
+        <div id="recommendationForm">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Generate New Recommendations</h5>
+                    <p class="card-text">Select the types of recommendations you'd like to receive:</p>
+                    
+                    <form id="generateRecommendationsForm" method="post" action="{% url 'generate_recommendations' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="savings" id="savings" name="recommendation_types" checked>
+                                <label class="form-check-label" for="savings">
+                                    Savings Recommendations
+                                </label>
+                                <small class="form-text text-muted d-block">Tips to optimize your savings rate and goal contributions.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="goals" id="goals" name="recommendation_types" checked>
+                                <label class="form-check-label" for="goals">
+                                    Goal Adjustments
+                                </label>
+                                <small class="form-text text-muted d-block">Suggestions for adjusting your goals based on your progress.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="allocation" id="allocation" name="recommendation_types" checked>
+                                <label class="form-check-label" for="allocation">
+                                    Allocation Suggestions
+                                </label>
+                                <small class="form-text text-muted d-block">Recommendations on how to allocate your funds between goals.</small>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="generateBtn" class="btn btn-primary">Generate Recommendations</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="loadingRecommendations" style="display: none;">
+            <div class="loader-container">
+                <div class="loader"></div>
+                <h5>Analyzing your financial data...</h5>
+                <p class="text-muted">This may take a few moments.</p>
+            </div>
+        </div>
+        
+        <div id="recommendationResults" style="display: none;">
+            <h4 class="mb-3">Your Personalized Recommendations</h4>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-type">Savings Strategy</div>
+                <h5>Increase your monthly contribution to "Emergency Fund"</h5>
+                <p>Based on your income and current contribution rate, we recommend increasing your monthly contribution to your Emergency Fund by $75. This will help you reach your goal 3 months sooner.</p>
+                <div class="recommendation-actions">
+                    <a href="{% url 'add_contribution' goal_id=1 %}" class="btn btn-sm btn-outline-primary">Add Contribution</a>
+                    <form method="post" action="{% url 'dismiss_recommendation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="recommendation_id" value="1">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-type">Goal Adjustment</div>
+                <h5>Extend the target date for "New Car"</h5>
+                <p>Your "New Car" goal is currently 35% behind schedule. Consider extending your target date by 3 months or increasing your monthly contributions by $150.</p>
+                <div class="recommendation-actions">
+                    <a href="{% url 'edit_goal' goal_id=2 %}" class="btn btn-sm btn-outline-primary">Adjust Goal</a>
+                    <form method="post" action="{% url 'dismiss_recommendation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="recommendation_id" value="2">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-type">Allocation Suggestion</div>
+                <h5>Redistribute funds between goals</h5>
+                <p>Your "Vacation" goal is currently overfunded by 15%, while your "Education" goal is underfunded. Consider moving $300 from "Vacation" to "Education" to balance your progress.</p>
+                <div class="recommendation-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#transferModal">
+                        Transfer Funds
+                    </button>
+                    <form method="post" action="{% url 'dismiss_recommendation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="recommendation_id" value="3">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'goal_list' %}" class="btn btn-primary">Return to Dashboard</a>
+            </div>
+        </div>
+        
+        <!-- Transfer Modal -->
+        <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transferModalLabel">Transfer Funds Between Goals</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="transferForm" method="post" action="#">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="from_goal" class="form-label">From Goal</label>
+                                <select class="form-select" id="from_goal" name="from_goal" required>
+                                    <option value="3">Vacation ($1,500 available)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="to_goal" class="form-label">To Goal</label>
+                                <select class="form-select" id="to_goal" name="to_goal" required>
+                                    <option value="4">Education</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="transfer_amount" class="form-label">Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="transfer_amount" name="transfer_amount" value="300" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="transfer_note" class="form-label">Note (Optional)</label>
+                                <textarea class="form-control" id="transfer_note" name="transfer_note" rows="2">Adjusting allocation based on recommendation</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" form="transferForm" class="btn btn-primary">Transfer Funds</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generateBtn');
+            const recommendationForm = document.getElementById('recommendationForm');
+            const loadingRecommendations = document.getElementById('loadingRecommendations');
+            const recommendationResults = document.getElementById('recommendationResults');
+            
+            generateBtn.addEventListener('click', function() {
+                // Hide the form and show loading
+                recommendationForm.style.display = 'none';
+                loadingRecommendations.style.display = 'block';
+                
+                // Simulate loading time (replace with actual form submission)
+                setTimeout(function() {
+                    loadingRecommendations.style.display = 'none';
+                    recommendationResults.style.display = 'block';
+                }, 2000);
+            });
+        });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
