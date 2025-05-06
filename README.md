@@ -31,10 +31,4 @@
 | 🧠 **Backend**   | Django (Frontend routing), Flask (API handling / backend logic) |
 | 🗃 **Database**  | SQL (SQLite by default) |
 | 📈 **Visuals**   | Chart.js, Font Awesome |
-| ✨ **UX/UI**     | Responsive design, transitions, and animations.|
-
-📫 Contact
-
-💌 For feedback, questions, or collaboration:
-
-📧 Email: krishm.creative@gmail.com
+| ✨ **UX/UI**     | Responsive design, transitions, and animations|
