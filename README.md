@@ -32,3 +32,5 @@
 | 🗃 **Database**  | SQL (SQLite by default) |
 | 📈 **Visuals**   | Chart.js, Font Awesome |
 | ✨ **UX/UI**     | Responsive design, transitions, and animations|
+
+Deployment link:- https://krishm.pythonanywhere.com
